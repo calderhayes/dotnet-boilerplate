@@ -1,0 +1,47 @@
+{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "warningsAsErrors": true,
+    "debugType": "portable",
+    "xmlDoc": true,
+    "nowarn": [
+      "SA1616",
+      "SA1633",
+      "SA1606",
+      "SA1600",
+      "CS1591",
+      "SA1508",
+      "SA1515",
+      "SA1642",
+      "SA1614",
+      "SA1623",
+      "SA1622",
+      "SA1618"
+    ]
+  },
+  "dependencies": {
+    "Npgsql.EntityFrameworkCore.PostgreSQL.Design": "1.1.0",
+    "Npgsql.EntityFrameworkCore.PostgreSQL": "1.1.0",
+    "Microsoft.EntityFrameworkCore.Design": {
+      "version": "1.1.0",
+      "type": "build"
+    },
+    "StyleCop.Analyzers": {
+      "version": "1.0.0",
+      "type": "build"
+    }
+  },
+  "frameworks": {
+    "netstandard1.6": {
+      "dependencies": {
+        "NETStandard.Library": "1.6.1"
+      }
+    }
+  },
+  "tools": {
+    "Microsoft.EntityFrameworkCore.Tools.DotNet": {
+      "version": "1.1.0-preview4-final",
+      "type": "build"
+    }
+  }
+}

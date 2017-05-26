@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-2.2.0.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.0.min.js"></script>
+    <script src="http://localhost:5080/signalr/hubs"></script>
+</head>
+<body>
+
+    <div id="msg">Initializing...</div>
+    <button style="display:none;" id="sayHiButton">Say Hi</button>
+    <button style="display:none;" id="authorized">Authorized</button>
+
+    <button id="login">Login</button>
+
+    <script type="text/javascript">
+        var accessToken = null;
+
+        var hub = $.connection.helloHub;
+
+        hub.client.someoneSaidHi = function(username) {
+          console.log(username + " said hi");
+        };
+
+        hub.client.youSaidHi = function(username) {
+          console.log("You said hi (" + username + ")");
+        };
+
+        $("#sayHiButton").click(function () {
+            hub.server.sayHello();
+        });
+
+        $("#authorized").click(function () {
+            hub.server.sayHiAuthorized();
+        });
+
+        $("#login").click(function() {
+            console.log("Logging in");
+
+            var username = "john.doe@fake.com";
+            var password = "password123";
+            var clientId = "oauth2client";
+            var clientSecret = "notasecret";
+
+            window.fetch("http://localhost:5050/connect/token", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    Accept: 'application/json'
+                },
+                body: $.param({
+                    grant_type: 'password',
+                    username: username,
+                    password: password,
+                    client_id: clientId,
+                    client_secret: clientSecret,
+                    scope: 'customAPI.write'
+                })
+            })
+            .then(function (data) {
+                console.log("SUCCESS", data);
+                return data.json();
+            })
+            .then(function (data) {
+                console.log(data);
+                accessToken = data.access_token;
+                // $.connection.ajaxDefaults.headers = {
+                //     "Bearer": accessToken
+                // };
+                $.connection.hub.qs = { authorization: accessToken };
+            })
+            .catch(console.error.bind(console));
+        });
+
+        $.connection.hub.url = "http://localhost:5080/signalr";
+        $.connection.hub.logging = true;
+        $.connection.hub.start({ transport: 'longPolling' }).done(function () {
+          console.log("Started!");
+          $("#sayHiButton").show();
+          $("#authorized").show();
+          $("#msg").html("Ready");
+        })
+        .fail(() => {
+          console.error("CONNECTION FAILED!");
+        });
+    </script>
+</body>
+</html>

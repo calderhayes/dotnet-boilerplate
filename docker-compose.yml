@@ -1,0 +1,69 @@
+version: '2'
+
+services:
+
+  # auth:
+  #   container_name: 'auth'
+  #   image: 'auth'
+  #   build:
+  #     context: .
+  #     dockerfile: auth.dockerfile
+  #   volumes:
+  #     - ./src:/src
+  #   ports:
+  #    - "5050:5050"
+  #   networks:
+  #     - aspnetcoreapp-network
+
+  # web:
+  #   container_name: 'aspnetcoreapp'
+  #   image: 'aspnetcoreapp'
+  #   build:
+  #     context: .
+  #     dockerfile: development.dockerfile
+  #   volumes:
+  #     - ./src:/src
+  #   ports:
+  #    - "5080:5080"
+  #   depends_on:
+  #    - "dbsetup"
+  #   networks:
+  #     - aspnetcoreapp-network
+
+  # dbsetup:
+  #   container_name: 'dbsetup'
+  #   image: 'dbsetup'
+  #   build:
+  #     context: .
+  #     dockerfile: migrations.dockerfile
+  #   volumes:
+  #     - ./src:/src
+  #   depends_on:
+  #    - "postgres"
+  #   networks:
+  #     - aspnetcoreapp-network
+
+  postgres:
+    container_name: 'postgres'
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: app
+    ports:
+     - "5432:5432"
+    networks:
+      - aspnetcoreapp-network
+
+  mailcatcher:
+    container_name: 'mailcatcher'
+    image: zolweb/docker-mailcatcher
+    ports:
+     - "1025:1025"
+     - "1080:1080"
+    networks:
+      - aspnetcoreapp-network
+
+networks:
+  aspnetcoreapp-network:
+    driver: bridge
+

@@ -1,0 +1,32 @@
+{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "debugType": "portable",
+    "warningsAsErrors": true,
+    "xmlDoc": true,
+    "nowarn": [
+      "SA1616",
+      "SA1633",
+      "SA1606",
+      "SA1600",
+      "CS1591",
+      "SA1508",
+      "SA1515",
+      "SA1642",
+      "SA1614",
+      "SA1623"
+    ]
+  },
+  "dependencies": {
+    "System.Security.AccessControl": "4.3.0",
+    "System.IO.FileSystem.AccessControl": "4.3.0",
+    "System.IO.FileSystem": "4.3.0"
+  },
+  "frameworks": {
+    "netstandard1.6": {
+      "dependencies": {
+        "NETStandard.Library": "1.6.1"
+      }
+    }
+  }
+}

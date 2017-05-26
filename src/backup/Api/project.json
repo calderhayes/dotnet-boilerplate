@@ -1,0 +1,66 @@
+{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "debugType": "portable",
+    "warningsAsErrors": true,
+    "emitEntryPoint": true,
+    "xmlDoc": true,
+    "nowarn": [
+      "SA1616",
+      "SA1633",
+      "SA1606",
+      "SA1600",
+      "CS1591",
+      "SA1508",
+      "SA1515",
+      "SA1642",
+      "SA1614",
+      "SA1623"
+    ]
+  },
+  "dependencies": {
+    "Hangfire.AspNetCore": "1.6.12",
+    "Hangfire.Core": "1.6.12",
+    "Hangfire.PostgreSql": "1.4.7.1",
+    "Microsoft.AspNetCore.SignalR.Server": "0.2.0-*",
+    "Microsoft.AspNetCore.WebSockets": "1.0.1",
+    "Microsoft.AspNetCore.Server.Kestrel": "1.1.0",
+    "Microsoft.AspNetCore.Mvc": "1.1.0",
+    "Microsoft.Extensions.Configuration": "1.1.0",
+    "Microsoft.Extensions.Configuration.Binder": "1.1.0",
+    "Microsoft.Extensions.Configuration.Json": "1.1.0",
+    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.1.0",
+    "Microsoft.Extensions.Logging.Console": "1.1.0",
+    "Microsoft.Extensions.Logging.Debug": "1.1.0",
+    "Microsoft.AspNetCore.Authentication.JwtBearer": "1.1.0",
+    "Npgsql.EntityFrameworkCore.PostgreSQL": "1.1.0",
+    "Microsoft.EntityFrameworkCore.Design": {
+      "version": "1.1.0",
+      "type": "build"
+    },
+    "StyleCop.Analyzers": {
+      "version": "1.0.0",
+      "type": "build"
+    },
+    "Core": {
+      "target": "project"
+    },
+    "Data": {
+      "target": "project"
+    },
+    "File": {
+      "target": "project"
+    }
+  },
+  "frameworks": {
+    "netcoreapp1.1": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.1.0"
+        }
+      },
+      "imports": "dnxcore50"
+    }
+  }
+}
