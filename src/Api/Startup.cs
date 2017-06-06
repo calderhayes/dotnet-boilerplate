@@ -150,8 +150,9 @@ namespace DotNetBoilerplate.Api
       // For testing
       BackgroundJob.Enqueue(() => System.Console.WriteLine("HANGFIRE TEST"));
 
-      DatabaseInitializer.Initialize(
+      var databaseInitializer = new Core.Utility.DatabaseInitializer(
         dbContext, loggerFactory, config.DefaultCulture);
+      databaseInitializer.Initialize();
 
       this.Logger.LogInformation("App configured");
     }
