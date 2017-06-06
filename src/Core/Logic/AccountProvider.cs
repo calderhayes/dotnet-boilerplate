@@ -27,12 +27,15 @@ namespace DotNetBoilerplate.Core.Logic
     /// </summary>
     /// <param name="dbContext"></param>
     /// <param name="logger"></param>
+    /// <param name="principalProvider"></param>
     public AccountProvider(
       IDbContext dbContext,
-      ILogger<AccountProvider> logger)
+      ILogger<AccountProvider> logger,
+      IPrincipalProvider principalProvider)
     {
       this.Logger = logger;
       this.DbContext = dbContext;
+      this.PrincipalProvider = principalProvider;
     }
 
     /// <summary>
@@ -46,6 +49,12 @@ namespace DotNetBoilerplate.Core.Logic
     /// </summary>
     /// <returns></returns>
     private ILogger Logger { get; }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <returns></returns>
+    private IPrincipalProvider PrincipalProvider { get; }
 
     /// <summary>
     ///

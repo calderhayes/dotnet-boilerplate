@@ -94,6 +94,16 @@ namespace DotNetBoilerplate.Data
         dbContext.Principals.Add(principal);
         dbContext.SaveChanges();
 
+        var principalClosureMap = new PrincipalClosureMap()
+        {
+          AncestorId = principal.Id,
+          DescendantId = principal.Id,
+          PathLength = 0,
+          CreatedTicketId = ticketId
+        };
+        dbContext.PrincipalClosureMaps.Add(principalClosureMap);
+        dbContext.SaveChanges();
+
         var user = new UserAccount()
         {
           Id = principal.Id,

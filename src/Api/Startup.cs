@@ -150,7 +150,8 @@ namespace DotNetBoilerplate.Api
       // For testing
       BackgroundJob.Enqueue(() => System.Console.WriteLine("HANGFIRE TEST"));
 
-      DatabaseInitializer.Initialize(dbContext, loggerFactory, config.DefaultCulture);
+      DatabaseInitializer.Initialize(
+        dbContext, loggerFactory, config.DefaultCulture);
 
       this.Logger.LogInformation("App configured");
     }
@@ -229,6 +230,7 @@ namespace DotNetBoilerplate.Api
       services.AddSingleton<IApplicationConfiguration>(o => new ApplicationConfiguration(this.Configuration));
       services.AddSingleton<ICultureProvider, CultureProvider>();
       services.AddSingleton<IEmailProvider, EmailProvider>();
+      services.AddScoped<IPrincipalProvider, PrincipalProvider>();
       services.AddScoped<IAccountProvider, AccountProvider>();
       services.AddScoped<IAuditProvider, AuditProvider>();
       services.AddScoped<IUserProvider, UserProvider>();
