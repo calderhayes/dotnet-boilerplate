@@ -65,7 +65,7 @@ namespace DotNetBoilerplate.Core.Logic
 
       var allDomains = new List<PrincipalClosureMapDomain>()
       {
-        PrincipalClosureMapDomain.UserGroup
+        PrincipalClosureMapDomain.SecurityProfile
       };
 
       foreach (var domain in allDomains)
