@@ -17,6 +17,8 @@ namespace DotNetBoilerplate.Data
     {
     }
 
+    public DbSet<PrincipalClosureMap> PrincipalClosureMaps { get; set; }
+
     public DbSet<Principal> Principals { get; set; }
 
     public DbSet<UserAccount> UserAccounts { get; set; }
@@ -128,6 +130,8 @@ namespace DotNetBoilerplate.Data
       base.OnModelCreating(builder);
 
       UserAuthenticationSource.OnModelCreating(builder);
+
+      PrincipalClosureMap.OnModelCreating(builder);
 
       builder.Entity<UserAccount>()
         .HasIndex(u => u.UserName)
