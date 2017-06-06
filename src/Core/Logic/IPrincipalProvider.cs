@@ -5,6 +5,7 @@ namespace DotNetBoilerplate.Core.Logic
   using DotNetBoilerplate.Data;
   using DotNetBoilerplate.Data.Entity;
   using DotNetBoilerplate.Data.Model;
+  using DotNetBoilerplate.Data.Model.Lookup;
   using Microsoft.Extensions.Logging;
 
   public interface IPrincipalProvider
@@ -18,5 +19,11 @@ namespace DotNetBoilerplate.Core.Logic
       string label,
       PrincipalType principalType,
       long auditTicketId);
+
+    Task AddChildPrincipal(
+      long ticketId,
+      long parentPrincipalId,
+      long childPrincipalId,
+      PrincipalClosureMapDomain domain);
   }
 }

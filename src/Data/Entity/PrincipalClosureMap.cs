@@ -3,6 +3,7 @@ namespace DotNetBoilerplate.Data.Entity
   using System.ComponentModel.DataAnnotations;
   using System.ComponentModel.DataAnnotations.Schema;
   using DotNetBoilerplate.Data.Model;
+  using DotNetBoilerplate.Data.Model.Lookup;
   using Microsoft.EntityFrameworkCore;
 
   public class PrincipalClosureMap
@@ -19,6 +20,9 @@ namespace DotNetBoilerplate.Data.Entity
 
     [ForeignKey(nameof(DescendantId))]
     public Principal DescendantPrincipal { get; set; }
+
+    [Required]
+    public PrincipalClosureMapDomain Domain { get; set; }
 
     [Required]
     public int PathLength { get; set; }

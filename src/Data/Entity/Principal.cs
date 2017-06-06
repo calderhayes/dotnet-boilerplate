@@ -3,15 +3,7 @@ namespace DotNetBoilerplate.Data.Entity
   using System.ComponentModel.DataAnnotations;
   using System.ComponentModel.DataAnnotations.Schema;
   using DotNetBoilerplate.Data.Model;
-
-  /// <summary>
-  /// Principal classification types
-  /// </summary>
-  public enum PrincipalType
-    : int
-  {
-    User = 0
-  }
+  using DotNetBoilerplate.Data.Model.Lookup;
 
   /// <summary>
   /// Defines a base principal object

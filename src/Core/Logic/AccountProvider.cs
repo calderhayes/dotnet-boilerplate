@@ -8,6 +8,7 @@ namespace DotNetBoilerplate.Core.Logic
   using DotNetBoilerplate.Data;
   using DotNetBoilerplate.Data.Entity;
   using DotNetBoilerplate.Data.Model;
+  using DotNetBoilerplate.Data.Model.Lookup;
   using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.Logging;
 

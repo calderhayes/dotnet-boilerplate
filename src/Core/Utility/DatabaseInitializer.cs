@@ -6,6 +6,7 @@ namespace DotNetBoilerplate.Core.Utility
   using DotNetBoilerplate.Data;
   using DotNetBoilerplate.Data.Constants;
   using DotNetBoilerplate.Data.Entity;
+  using DotNetBoilerplate.Data.Model.Lookup;
   using Microsoft.Extensions.Logging;
 
   public class DatabaseInitializer
