@@ -10,6 +10,8 @@ namespace DotNetBoilerplate.Data
 
   public interface IDbContext
   {
+    DbSet<Principal> Principals { get; }
+
     DbSet<UserAccount> UserAccounts { get; }
 
     DbSet<AuditTicket> AuditTickets { get; }

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.6</TargetFramework>
-    <NoWarn>$(NoWarn);SA1616;SA1633;SA1606;SA1600;CS1591;SA1508;SA1515;SA1642;SA1614;SA1623</NoWarn>
+    <NoWarn>$(NoWarn);SA1616;SA1633;SA1606;SA1600;CS1591;SA1508;SA1515;SA1642;SA1614;SA1623;SA1602;</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType>portable</DebugType>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

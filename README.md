@@ -17,6 +17,14 @@ dotnet ef database update
 
 Navigate to localhost:1080 to see the mailcatcher GUI.
 
+## pgAdmin4
+
+Useful GUI tool for postgreSQL manipulation.
+
+```
+docker run --rm -p 5050:5050 thajeztah/pgadmin4
+```
+
 ## Authentication Server
 
 In a separate terminal you can run the Auth project for a simple auth provider

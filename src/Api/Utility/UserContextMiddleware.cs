@@ -123,7 +123,7 @@ namespace DotNetBoilerplate.Api.Utility
           // Register
           var anon = await accountProvider.GetAnonymousAccount();
           var ticket = await auditProvider.CreateRequestTicket(
-            anon.UserId,
+            anon.Id,
             context.TraceIdentifier,
             ipAddress,
             context.Request.Method,
@@ -186,7 +186,7 @@ namespace DotNetBoilerplate.Api.Utility
       }
 
       var requestTicket = await auditProvider.CreateRequestTicket(
-        userAccount.UserId,
+        userAccount.Id,
         context.TraceIdentifier,
         ipAddress,
         context.Request.Method,

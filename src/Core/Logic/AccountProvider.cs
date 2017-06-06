@@ -57,7 +57,7 @@ namespace DotNetBoilerplate.Core.Logic
       string authSource, string sub)
     {
       var query = from uas in this.DbContext.UserAuthenticationSources
-      join ua in this.DbContext.UserAccounts on uas.UserId equals ua.UserId
+      join ua in this.DbContext.UserAccounts on uas.UserId equals ua.Id
       where uas.AuthenticationSource == authSource && uas.Subject == sub
       select ua;
 
@@ -84,9 +84,22 @@ namespace DotNetBoilerplate.Core.Logic
       string locale,
       IList<string> roles)
     {
+      var username = await this.GetUniqueUsername(preferredUsername.Trim());
+
+      var principal = new Principal()
+      {
+        Label = username,
+        PrincipalType = PrincipalType.User,
+        CreatedTicketId = auditTicketId,
+        ModifiedTicketId = auditTicketId
+      };
+      this.DbContext.Principals.Add(principal);
+      await this.DbContext.SaveChangesAsync();
+
       var userAccount = new UserAccount()
       {
-        UserName = await this.GetUniqueUsername(preferredUsername.Trim()),
+        Id = principal.Id,
+        UserName = username,
         Culture = locale,
         CreatedTicketId = auditTicketId,
         ModifiedTicketId = auditTicketId
@@ -99,7 +112,7 @@ namespace DotNetBoilerplate.Core.Logic
       {
         AuthenticationSource = authSource,
         Subject = sub,
-        UserId = userAccount.UserId,
+        UserId = userAccount.Id,
         CreatedTicketId = auditTicketId,
         ModifiedTicketId = auditTicketId
       };

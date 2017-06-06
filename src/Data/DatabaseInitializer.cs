@@ -34,7 +34,7 @@ namespace DotNetBoilerplate.Data
       {
         userId = dbContext.UserAccounts
           .Where(u => u.UserName == SystemUsername.System)
-          .Select(u => u.UserId)
+          .Select(u => u.Id)
           .Single();
       }
       else
@@ -84,8 +84,19 @@ namespace DotNetBoilerplate.Data
 
       if (!userExists)
       {
+        var principal = new Principal()
+        {
+          Label = username,
+          PrincipalType = PrincipalType.User,
+          CreatedTicketId = ticketId,
+          ModifiedTicketId = ticketId
+        };
+        dbContext.Principals.Add(principal);
+        dbContext.SaveChanges();
+
         var user = new UserAccount()
         {
+          Id = principal.Id,
           UserName = username,
           Culture = defaultCulture,
           CreatedTicketId = ticketId,

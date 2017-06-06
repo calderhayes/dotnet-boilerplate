@@ -17,6 +17,8 @@ namespace DotNetBoilerplate.Data
     {
     }
 
+    public DbSet<Principal> Principals { get; set; }
+
     public DbSet<UserAccount> UserAccounts { get; set; }
 
     public DbSet<AuditTicket> AuditTickets { get; set; }

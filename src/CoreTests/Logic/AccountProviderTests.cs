@@ -27,6 +27,15 @@ namespace DotNetBoilerplate.Core.Logic.Tests
       long createdTicketId = 4424;
       long modifiedTicketId = 4230;
 
+      var principal = new Principal()
+      {
+        Id = userId,
+        Label = "testuser",
+        PrincipalType = PrincipalType.User,
+        CreatedTicketId = createdTicketId,
+        ModifiedTicketId = modifiedTicketId
+      }
+
       var userAccount = new UserAccount()
       {
         UserId = userId,
@@ -48,6 +57,9 @@ namespace DotNetBoilerplate.Core.Logic.Tests
           ModifiedTicketId = modifiedTicketId
         };
         context.UserAuthenticationSources.Add(userSource);
+        await context.SaveChangesAsync();
+
+        context.Principals.Add(principal);
         await context.SaveChangesAsync();
 
         context.UserAccounts.Add(userAccount);

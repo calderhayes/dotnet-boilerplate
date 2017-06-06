@@ -3,25 +3,37 @@ namespace DotNetBoilerplate.Data.Entity
   using System.ComponentModel.DataAnnotations;
   using System.ComponentModel.DataAnnotations.Schema;
   using DotNetBoilerplate.Data.Model;
-  using Microsoft.EntityFrameworkCore;
 
-  public class UserAccount
-    : IUserAccount, IPrincipal
+  /// <summary>
+  /// Principal classification types
+  /// </summary>
+  public enum PrincipalType
+    : int
   {
+    User = 0
+  }
+
+  /// <summary>
+  /// Defines a base principal object
+  /// </summary>
+  public class Principal
+    : IPrincipal
+  {
+    /// <summary>
+    /// Primary Key
+    /// </summary>
+    /// <returns></returns>
     [Key]
     public long Id { get; set; }
 
     [Required]
-    public string UserName { get; set; }
+    public string Label { get; set; }
 
     [Required]
-    public string Culture { get; set; }
+    public PrincipalType PrincipalType { get; set; }
 
     [Required]
     public long CreatedTicketId { get; set; }
-
-    [ForeignKey(nameof(Id))]
-    public Principal Principal { get; set; }
 
     [ForeignKey(nameof(CreatedTicketId))]
     public AuditTicket CreatedAuditTicket { get; set; }
