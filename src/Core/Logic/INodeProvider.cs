@@ -13,17 +13,17 @@ namespace DotNetBoilerplate.Core.Logic
     Task<INode> CreateNode(
       IUserContext userContext,
       string label,
-      NodeType principalType);
+      NodeType nodeType);
 
     Task<INode> CreateNode(
       string label,
-      NodeType principalType,
+      NodeType nodeType,
       long auditTicketId);
 
     Task AddChildNode(
       long ticketId,
-      long parentPrincipalId,
-      long childPrincipalId,
+      long parentNodeId,
+      long childNodeId,
       NodeClosureMapDomain domain);
   }
 }

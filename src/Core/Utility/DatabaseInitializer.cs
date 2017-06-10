@@ -20,14 +20,14 @@ namespace DotNetBoilerplate.Core.Utility
       this.Logger = loggerFactory.CreateLogger<DatabaseInitializer>();
       this.DefaultCulture = defaultCulture;
 
-      var principalProvider = new NodeProvider(
+      var nodeProvider = new NodeProvider(
         dbContext,
         loggerFactory.CreateLogger<NodeProvider>());
 
       this.AccountProvider = new AccountProvider(
         dbContext,
         loggerFactory.CreateLogger<AccountProvider>(),
-        principalProvider);
+        nodeProvider);
     }
 
     public DatabaseInitializer(
@@ -83,7 +83,7 @@ namespace DotNetBoilerplate.Core.Utility
 
       if (!userExists)
       {
-        var principal = new Node()
+        var node = new Node()
         {
           ExternalId = Guid.NewGuid(),
           Label = username,
@@ -91,22 +91,22 @@ namespace DotNetBoilerplate.Core.Utility
           CreatedTicketId = ticketId,
           ModifiedTicketId = ticketId
         };
-        this.DbContext.Nodes.Add(principal);
+        this.DbContext.Nodes.Add(node);
         this.DbContext.SaveChanges();
 
-        var principalClosureMap = new NodeClosureMap()
+        var nodeClosureMap = new NodeClosureMap()
         {
-          AncestorId = principal.Id,
-          DescendantId = principal.Id,
+          AncestorId = node.Id,
+          DescendantId = node.Id,
           PathLength = 0,
           CreatedTicketId = ticketId
         };
-        this.DbContext.NodeClosureMaps.Add(principalClosureMap);
+        this.DbContext.NodeClosureMaps.Add(nodeClosureMap);
         this.DbContext.SaveChanges();
 
         var user = new UserAccount()
         {
-          Id = principal.Id,
+          Id = node.Id,
           UserName = username,
           Culture = this.DefaultCulture,
           CreatedTicketId = ticketId,
