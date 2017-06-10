@@ -28,6 +28,11 @@ namespace DotNetBoilerplate.Core.Utility
         dbContext,
         loggerFactory.CreateLogger<AccountProvider>(),
         nodeProvider);
+
+      this.SecurityProvider = new SecurityProvider(
+        dbContext,
+        loggerFactory.CreateLogger<SecurityProvider>(),
+        nodeProvider);
     }
 
     public DatabaseInitializer(
@@ -50,6 +55,8 @@ namespace DotNetBoilerplate.Core.Utility
 
     private IAccountProvider AccountProvider { get; }
 
+    private ISecurityProvider SecurityProvider { get; }
+
     public void Initialize()
     {
       this.Logger.LogDebug("Initializing database");
@@ -62,6 +69,15 @@ namespace DotNetBoilerplate.Core.Utility
       this.DbContext.SaveChanges();
 
       this.Logger.LogDebug("Database initialized");
+    }
+
+    private void InitializeSecurityProfiles(long ticketId)
+    {
+      this.Logger.LogDebug("Initializing security profiles");
+
+      // this.SecurityProvider.CreateSecurityProfile()
+
+      this.Logger.LogDebug("Security profiles initialized");
     }
 
     private void InitializeUsers(long ticketId)
