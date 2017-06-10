@@ -10,6 +10,7 @@ namespace DotNetBoilerplate.Core.Logic.Tests
   using Xunit;
   using Moq;
   using Microsoft.Extensions.Logging;
+  using DotNetBoilerplate.Data.Model.Lookup;
 
   public class AccountProviderTests
   {
@@ -34,11 +35,11 @@ namespace DotNetBoilerplate.Core.Logic.Tests
         PrincipalType = PrincipalType.User,
         CreatedTicketId = createdTicketId,
         ModifiedTicketId = modifiedTicketId
-      }
+      };
 
       var userAccount = new UserAccount()
       {
-        UserId = userId,
+        Id = userId,
         UserName = "testuser",
         Culture = "en-CA",
         CreatedTicketId = createdTicketId,
@@ -68,13 +69,15 @@ namespace DotNetBoilerplate.Core.Logic.Tests
 
       var logger = new Mock<ILogger<AccountProvider>>();
 
+      var principalProvider = new Mock<IPrincipalProvider>();
+
       // Execute method
       using (var context = new PostgreSQLContext(options))
       {
-        var accountProvider = new AccountProvider(context, logger.Object);
+        var accountProvider = new AccountProvider(context, logger.Object, principalProvider.Object);
         var match = await accountProvider.GetUserByAuthSourceAndSub(authSource, subject);
         Assert.True(match != null, "Must find a match");
-        Assert.True(match.UserId == userId, "User IDs must match");
+        Assert.True(match.Id == userId, "User IDs must match");
         Assert.True(match.UserName == userAccount.UserName);
         Assert.True(match.Culture == userAccount.Culture);
       }
@@ -93,10 +96,12 @@ namespace DotNetBoilerplate.Core.Logic.Tests
 
       var logger = new Mock<ILogger<AccountProvider>>();
 
+      var principalProvider = new Mock<IPrincipalProvider>();
+
       // Execute method
       using (var context = new PostgreSQLContext(options))
       {
-        var accountProvider = new AccountProvider(context, logger.Object);
+        var accountProvider = new AccountProvider(context, logger.Object, principalProvider.Object);
         var match = await accountProvider.GetUserByAuthSourceAndSub(authSource, subject);
         Assert.True(match == null, "Must not find a match");
       }
