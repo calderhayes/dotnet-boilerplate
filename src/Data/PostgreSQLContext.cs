@@ -133,6 +133,8 @@ namespace DotNetBoilerplate.Data
 
       PrincipalClosureMap.OnModelCreating(builder);
 
+      Principal.OnModelCreating(builder);
+
       builder.Entity<UserAccount>()
         .HasIndex(u => u.UserName)
         .IsUnique();

@@ -1,5 +1,6 @@
 namespace DotNetBoilerplate.Core.Logic
 {
+  using System;
   using System.Collections.Generic;
   using System.Linq;
   using System.Threading.Tasks;
@@ -69,6 +70,7 @@ namespace DotNetBoilerplate.Core.Logic
     {
       var principal = new Principal()
       {
+        ExternalId = Guid.NewGuid(),
         Label = label,
         PrincipalType = principalType,
         CreatedTicketId = auditTicketId,
@@ -206,23 +208,6 @@ namespace DotNetBoilerplate.Core.Logic
       select p;
 
       return query;
-    }
-
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="principalId"></param>
-    /// <param name="domain"></param>
-    /// <returns></returns>
-    public async Task RemovePrincipalFromDomain(
-      long principalId, PrincipalClosureMapDomain domain)
-    {
-      var maps = await this.DbContext.PrincipalClosureMaps
-        .Where(m => (m.DescendantId == principalId || m.AncestorId == principalId) && m.PathLength != 0 && m.Domain == domain)
-        .ToListAsync();
-
-      this.DbContext.PrincipalClosureMaps.RemoveRange(maps);
-      await this.DbContext.SaveChangesAsync();
     }
   }
 }

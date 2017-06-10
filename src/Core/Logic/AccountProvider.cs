@@ -98,6 +98,7 @@ namespace DotNetBoilerplate.Core.Logic
 
       var principal = new Principal()
       {
+        ExternalId = Guid.NewGuid(),
         Label = username,
         PrincipalType = PrincipalType.User,
         CreatedTicketId = auditTicketId,

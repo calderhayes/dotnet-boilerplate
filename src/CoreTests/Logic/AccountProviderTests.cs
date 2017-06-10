@@ -31,6 +31,7 @@ namespace DotNetBoilerplate.Core.Logic.Tests
       var principal = new Principal()
       {
         Id = userId,
+        ExternalId = Guid.NewGuid(),
         Label = "testuser",
         PrincipalType = PrincipalType.User,
         CreatedTicketId = createdTicketId,
