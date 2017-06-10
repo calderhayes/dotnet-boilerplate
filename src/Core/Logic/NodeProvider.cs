@@ -12,17 +12,17 @@ namespace DotNetBoilerplate.Core.Logic
   using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.Logging;
 
-  public class PrincipalProvider
-    : IPrincipalProvider
+  public class NodeProvider
+    : INodeProvider
   {
     /// <summary>
     ///
     /// </summary>
     /// <param name="dbContext"></param>
     /// <param name="logger"></param>
-    public PrincipalProvider(
+    public NodeProvider(
       IDbContext dbContext,
-      ILogger<PrincipalProvider> logger)
+      ILogger<NodeProvider> logger)
     {
       this.Logger = logger;
       this.DbContext = dbContext;
@@ -47,12 +47,12 @@ namespace DotNetBoilerplate.Core.Logic
     /// <param name="label"></param>
     /// <param name="principalType"></param>
     /// <returns></returns>
-    public async Task<Principal> CreatePrincipal(
+    public async Task<INode> CreateNode(
       IUserContext userContext,
       string label,
-      PrincipalType principalType)
+      NodeType principalType)
     {
-      return await this.CreatePrincipal(
+      return await this.CreateNode(
         label, principalType, userContext.AuditTicketId);
     }
 
@@ -63,42 +63,43 @@ namespace DotNetBoilerplate.Core.Logic
     /// <param name="principalType"></param>
     /// <param name="auditTicketId"></param>
     /// <returns></returns>
-    public async Task<Principal> CreatePrincipal(
+    public async Task<INode> CreateNode(
       string label,
-      PrincipalType principalType,
+      NodeType principalType,
       long auditTicketId)
     {
-      var principal = new Principal()
+      var node = new Node()
       {
         ExternalId = Guid.NewGuid(),
         Label = label,
-        PrincipalType = principalType,
+        NodeType = principalType,
         CreatedTicketId = auditTicketId,
         ModifiedTicketId = auditTicketId
       };
-      this.DbContext.Principals.Add(principal);
+      this.DbContext.Nodes.Add(node);
       await this.DbContext.SaveChangesAsync();
 
-      var allDomains = new List<PrincipalClosureMapDomain>()
+      // Not sure if this is what we want
+      var allDomains = new List<NodeClosureMapDomain>()
       {
-        PrincipalClosureMapDomain.SecurityProfile
+        NodeClosureMapDomain.SecurityProfileAssignment
       };
 
       foreach (var domain in allDomains)
       {
-        var principalClosureMap = new PrincipalClosureMap()
+        var nodeClosureMap = new NodeClosureMap()
         {
-          AncestorId = principal.Id,
-          DescendantId = principal.Id,
+          AncestorId = node.Id,
+          DescendantId = node.Id,
           PathLength = 0,
           Domain = domain,
           CreatedTicketId = auditTicketId
         };
-        this.DbContext.PrincipalClosureMaps.Add(principalClosureMap);
+        this.DbContext.NodeClosureMaps.Add(nodeClosureMap);
         await this.DbContext.SaveChangesAsync();
       }
 
-      return principal;
+      return node;
     }
 
     /// <summary>
@@ -109,14 +110,14 @@ namespace DotNetBoilerplate.Core.Logic
     /// <param name="childPrincipalId"></param>
     /// <param name="domain"></param>
     /// <returns></returns>
-    public async Task AddChildPrincipal(
+    public async Task AddChildNode(
       long ticketId,
       long parentPrincipalId,
       long childPrincipalId,
-      PrincipalClosureMapDomain domain)
+      NodeClosureMapDomain domain)
     {
       // We must have this adhere to a directed acyclic graph, otherwise it gets very very messy
-      var violationExists = await this.DbContext.PrincipalClosureMaps
+      var violationExists = await this.DbContext.NodeClosureMaps
         .Where(m =>
           m.AncestorId == childPrincipalId
           && m.DescendantId == parentPrincipalId
@@ -131,7 +132,7 @@ namespace DotNetBoilerplate.Core.Logic
         throw new CoreException(msg);
       }
 
-      var existingMapsToUpdate = await this.DbContext.PrincipalClosureMaps
+      var existingMapsToUpdate = await this.DbContext.NodeClosureMaps
         .Where(m => m.DescendantId == parentPrincipalId && m.Domain == domain)
         .Select(m => new
         {
@@ -140,10 +141,10 @@ namespace DotNetBoilerplate.Core.Logic
         })
         .ToListAsync();
 
-      var mapsToAdd = new List<PrincipalClosureMap>();
+      var mapsToAdd = new List<NodeClosureMap>();
       foreach (var map in existingMapsToUpdate)
       {
-        var newMap = new PrincipalClosureMap()
+        var newMap = new NodeClosureMap()
         {
           AncestorId = map.AncestorId,
           DescendantId = childPrincipalId,
@@ -155,7 +156,7 @@ namespace DotNetBoilerplate.Core.Logic
         mapsToAdd.Add(newMap);
       }
 
-      this.DbContext.PrincipalClosureMaps.AddRange(mapsToAdd);
+      this.DbContext.NodeClosureMaps.AddRange(mapsToAdd);
 
       await this.DbContext.SaveChangesAsync();
     }
@@ -165,9 +166,9 @@ namespace DotNetBoilerplate.Core.Logic
     /// </summary>
     /// <param name="principalId"></param>
     /// <returns></returns>
-    public async Task<Principal> GetPrincipal(long principalId)
+    public async Task<INode> GetPrincipal(long principalId)
     {
-      return await this.DbContext.Principals
+      return await this.DbContext.Nodes
         .Where(p => p.Id == principalId)
         .SingleAsync();
     }
@@ -179,12 +180,12 @@ namespace DotNetBoilerplate.Core.Logic
     /// <param name="domain"></param>
     /// <param name="includeTarget"></param>
     /// <returns></returns>
-    public IQueryable<IPrincipal> GetAncestorsQuery(
-      long principalId, PrincipalClosureMapDomain domain, bool includeTarget)
+    public IQueryable<INode> GetAncestorsQuery(
+      long principalId, NodeClosureMapDomain domain, bool includeTarget)
     {
       var query =
-      from maps in this.DbContext.PrincipalClosureMaps
-      join p in this.DbContext.Principals on maps.AncestorId equals p.Id
+      from maps in this.DbContext.NodeClosureMaps
+      join p in this.DbContext.Nodes on maps.AncestorId equals p.Id
       where maps.DescendantId == principalId && maps.Domain == domain && (includeTarget || maps.PathLength != 0)
       select p;
 
@@ -198,12 +199,12 @@ namespace DotNetBoilerplate.Core.Logic
     /// <param name="domain"></param>
     /// <param name="includeTarget"></param>
     /// <returns></returns>
-    public IQueryable<IPrincipal> GetDescendantsQuery(
-      long principalId, PrincipalClosureMapDomain domain, bool includeTarget)
+    public IQueryable<INode> GetDescendantsQuery(
+      long principalId, NodeClosureMapDomain domain, bool includeTarget)
     {
       var query =
-      from maps in this.DbContext.PrincipalClosureMaps
-      join p in this.DbContext.Principals on maps.DescendantId equals p.Id
+      from maps in this.DbContext.NodeClosureMaps
+      join p in this.DbContext.Nodes on maps.DescendantId equals p.Id
       where maps.AncestorId == principalId && maps.Domain == domain && (includeTarget || maps.PathLength != 0)
       select p;
 

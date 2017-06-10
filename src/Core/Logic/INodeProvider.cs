@@ -8,22 +8,22 @@ namespace DotNetBoilerplate.Core.Logic
   using DotNetBoilerplate.Data.Model.Lookup;
   using Microsoft.Extensions.Logging;
 
-  public interface IPrincipalProvider
+  public interface INodeProvider
   {
-    Task<Principal> CreatePrincipal(
+    Task<INode> CreateNode(
       IUserContext userContext,
       string label,
-      PrincipalType principalType);
+      NodeType principalType);
 
-    Task<Principal> CreatePrincipal(
+    Task<INode> CreateNode(
       string label,
-      PrincipalType principalType,
+      NodeType principalType,
       long auditTicketId);
 
-    Task AddChildPrincipal(
+    Task AddChildNode(
       long ticketId,
       long parentPrincipalId,
       long childPrincipalId,
-      PrincipalClosureMapDomain domain);
+      NodeClosureMapDomain domain);
   }
 }

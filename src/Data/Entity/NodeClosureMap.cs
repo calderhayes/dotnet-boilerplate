@@ -6,23 +6,23 @@ namespace DotNetBoilerplate.Data.Entity
   using DotNetBoilerplate.Data.Model.Lookup;
   using Microsoft.EntityFrameworkCore;
 
-  public class PrincipalClosureMap
-    : IPrincipalClosureMap
+  public class NodeClosureMap
+    : INodeClosureMap
   {
     [Required]
     public long AncestorId { get; set; }
 
     [ForeignKey(nameof(AncestorId))]
-    public Principal AncestorPrincipal { get; set; }
+    public Node AncestorNode { get; set; }
 
     [Required]
     public long DescendantId { get; set; }
 
     [ForeignKey(nameof(DescendantId))]
-    public Principal DescendantPrincipal { get; set; }
+    public Node DescendantNode { get; set; }
 
     [Required]
-    public PrincipalClosureMapDomain Domain { get; set; }
+    public NodeClosureMapDomain Domain { get; set; }
 
     [Required]
     public int PathLength { get; set; }
@@ -35,7 +35,7 @@ namespace DotNetBoilerplate.Data.Entity
 
     public static void OnModelCreating(ModelBuilder modelBuilder)
     {
-      modelBuilder.Entity<PrincipalClosureMap>()
+      modelBuilder.Entity<NodeClosureMap>()
         .HasKey(e => new { e.AncestorId, e.DescendantId });
     }
   }

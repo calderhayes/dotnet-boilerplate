@@ -20,9 +20,9 @@ namespace DotNetBoilerplate.Core.Utility
       this.Logger = loggerFactory.CreateLogger<DatabaseInitializer>();
       this.DefaultCulture = defaultCulture;
 
-      var principalProvider = new PrincipalProvider(
+      var principalProvider = new NodeProvider(
         dbContext,
-        loggerFactory.CreateLogger<PrincipalProvider>());
+        loggerFactory.CreateLogger<NodeProvider>());
 
       this.AccountProvider = new AccountProvider(
         dbContext,
@@ -83,25 +83,25 @@ namespace DotNetBoilerplate.Core.Utility
 
       if (!userExists)
       {
-        var principal = new Principal()
+        var principal = new Node()
         {
           ExternalId = Guid.NewGuid(),
           Label = username,
-          PrincipalType = PrincipalType.User,
+          NodeType = NodeType.User,
           CreatedTicketId = ticketId,
           ModifiedTicketId = ticketId
         };
-        this.DbContext.Principals.Add(principal);
+        this.DbContext.Nodes.Add(principal);
         this.DbContext.SaveChanges();
 
-        var principalClosureMap = new PrincipalClosureMap()
+        var principalClosureMap = new NodeClosureMap()
         {
           AncestorId = principal.Id,
           DescendantId = principal.Id,
           PathLength = 0,
           CreatedTicketId = ticketId
         };
-        this.DbContext.PrincipalClosureMaps.Add(principalClosureMap);
+        this.DbContext.NodeClosureMaps.Add(principalClosureMap);
         this.DbContext.SaveChanges();
 
         var user = new UserAccount()

@@ -1,6 +1,6 @@
 namespace DotNetBoilerplate.Data.Model
 {
-  public interface IPrincipal
+  public interface INode
   {
     long Id { get; set; }
   }

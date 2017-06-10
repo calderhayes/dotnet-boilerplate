@@ -10,9 +10,9 @@ namespace DotNetBoilerplate.Data
 
   public interface IDbContext
   {
-    DbSet<PrincipalClosureMap> PrincipalClosureMaps { get; }
+    DbSet<NodeClosureMap> NodeClosureMaps { get; }
 
-    DbSet<Principal> Principals { get; }
+    DbSet<Node> Nodes { get; }
 
     DbSet<UserAccount> UserAccounts { get; }
 

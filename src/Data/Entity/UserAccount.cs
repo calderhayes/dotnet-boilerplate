@@ -6,7 +6,7 @@ namespace DotNetBoilerplate.Data.Entity
   using Microsoft.EntityFrameworkCore;
 
   public class UserAccount
-    : IUserAccount, IPrincipal
+    : IUserAccount, INode
   {
     [Key]
     public long Id { get; set; }
@@ -21,7 +21,7 @@ namespace DotNetBoilerplate.Data.Entity
     public long CreatedTicketId { get; set; }
 
     [ForeignKey(nameof(Id))]
-    public Principal Principal { get; set; }
+    public Node Node { get; set; }
 
     [ForeignKey(nameof(CreatedTicketId))]
     public AuditTicket CreatedAuditTicket { get; set; }

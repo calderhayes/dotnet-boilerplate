@@ -8,10 +8,10 @@ namespace DotNetBoilerplate.Data.Entity
   using Microsoft.EntityFrameworkCore;
 
   /// <summary>
-  /// Defines a base principal object
+  /// Defines a base node object
   /// </summary>
-  public class Principal
-    : IPrincipal
+  public class Node
+    : INode
   {
     /// <summary>
     /// Primary Key
@@ -30,7 +30,7 @@ namespace DotNetBoilerplate.Data.Entity
     public bool IsDeleted { get; set; } = false;
 
     [Required]
-    public PrincipalType PrincipalType { get; set; }
+    public NodeType NodeType { get; set; }
 
     [Required]
     public long CreatedTicketId { get; set; }
@@ -46,7 +46,7 @@ namespace DotNetBoilerplate.Data.Entity
 
     public static void OnModelCreating(ModelBuilder modelBuilder)
     {
-      modelBuilder.Entity<Principal>()
+      modelBuilder.Entity<Node>()
         .HasIndex(p => new { p.ExternalId })
         .IsUnique(true);
     }

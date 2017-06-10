@@ -28,12 +28,12 @@ namespace DotNetBoilerplate.Core.Logic.Tests
       long createdTicketId = 4424;
       long modifiedTicketId = 4230;
 
-      var principal = new Principal()
+      var node = new Node()
       {
         Id = userId,
         ExternalId = Guid.NewGuid(),
         Label = "testuser",
-        PrincipalType = PrincipalType.User,
+        NodeType = NodeType.User,
         CreatedTicketId = createdTicketId,
         ModifiedTicketId = modifiedTicketId
       };
@@ -61,7 +61,7 @@ namespace DotNetBoilerplate.Core.Logic.Tests
         context.UserAuthenticationSources.Add(userSource);
         await context.SaveChangesAsync();
 
-        context.Principals.Add(principal);
+        context.Nodes.Add(node);
         await context.SaveChangesAsync();
 
         context.UserAccounts.Add(userAccount);
@@ -70,12 +70,12 @@ namespace DotNetBoilerplate.Core.Logic.Tests
 
       var logger = new Mock<ILogger<AccountProvider>>();
 
-      var principalProvider = new Mock<IPrincipalProvider>();
+      var nodeProvider = new Mock<INodeProvider>();
 
       // Execute method
       using (var context = new PostgreSQLContext(options))
       {
-        var accountProvider = new AccountProvider(context, logger.Object, principalProvider.Object);
+        var accountProvider = new AccountProvider(context, logger.Object, nodeProvider.Object);
         var match = await accountProvider.GetUserByAuthSourceAndSub(authSource, subject);
         Assert.True(match != null, "Must find a match");
         Assert.True(match.Id == userId, "User IDs must match");
@@ -97,12 +97,12 @@ namespace DotNetBoilerplate.Core.Logic.Tests
 
       var logger = new Mock<ILogger<AccountProvider>>();
 
-      var principalProvider = new Mock<IPrincipalProvider>();
+      var nodeProvider = new Mock<INodeProvider>();
 
       // Execute method
       using (var context = new PostgreSQLContext(options))
       {
-        var accountProvider = new AccountProvider(context, logger.Object, principalProvider.Object);
+        var accountProvider = new AccountProvider(context, logger.Object, nodeProvider.Object);
         var match = await accountProvider.GetUserByAuthSourceAndSub(authSource, subject);
         Assert.True(match == null, "Must not find a match");
       }

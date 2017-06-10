@@ -28,15 +28,15 @@ namespace DotNetBoilerplate.Core.Logic
     /// </summary>
     /// <param name="dbContext"></param>
     /// <param name="logger"></param>
-    /// <param name="principalProvider"></param>
+    /// <param name="nodeProvider"></param>
     public AccountProvider(
       IDbContext dbContext,
       ILogger<AccountProvider> logger,
-      IPrincipalProvider principalProvider)
+      INodeProvider nodeProvider)
     {
       this.Logger = logger;
       this.DbContext = dbContext;
-      this.PrincipalProvider = principalProvider;
+      this.NodeProvider = nodeProvider;
     }
 
     /// <summary>
@@ -55,7 +55,7 @@ namespace DotNetBoilerplate.Core.Logic
     ///
     /// </summary>
     /// <returns></returns>
-    private IPrincipalProvider PrincipalProvider { get; }
+    private INodeProvider NodeProvider { get; }
 
     /// <summary>
     ///
@@ -96,20 +96,20 @@ namespace DotNetBoilerplate.Core.Logic
     {
       var username = await this.GetUniqueUsername(preferredUsername.Trim());
 
-      var principal = new Principal()
+      var node = new Node()
       {
         ExternalId = Guid.NewGuid(),
         Label = username,
-        PrincipalType = PrincipalType.User,
+        NodeType = NodeType.User,
         CreatedTicketId = auditTicketId,
         ModifiedTicketId = auditTicketId
       };
-      this.DbContext.Principals.Add(principal);
+      this.DbContext.Nodes.Add(node);
       await this.DbContext.SaveChangesAsync();
 
       var userAccount = new UserAccount()
       {
-        Id = principal.Id,
+        Id = node.Id,
         UserName = username,
         Culture = locale,
         CreatedTicketId = auditTicketId,

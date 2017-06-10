@@ -1,8 +1,9 @@
 namespace DotNetBoilerplate.Data.Model.Lookup
 {
-  public enum PrincipalType
+  public enum NodeType
     : int
   {
-    User = 0
+    User = 0,
+    SecurityProfile = 1
   }
 }

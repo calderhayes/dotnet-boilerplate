@@ -17,9 +17,9 @@ namespace DotNetBoilerplate.Data
     {
     }
 
-    public DbSet<PrincipalClosureMap> PrincipalClosureMaps { get; set; }
+    public DbSet<NodeClosureMap> NodeClosureMaps { get; set; }
 
-    public DbSet<Principal> Principals { get; set; }
+    public DbSet<Node> Nodes { get; set; }
 
     public DbSet<UserAccount> UserAccounts { get; set; }
 
@@ -131,9 +131,9 @@ namespace DotNetBoilerplate.Data
 
       UserAuthenticationSource.OnModelCreating(builder);
 
-      PrincipalClosureMap.OnModelCreating(builder);
+      NodeClosureMap.OnModelCreating(builder);
 
-      Principal.OnModelCreating(builder);
+      Node.OnModelCreating(builder);
 
       builder.Entity<UserAccount>()
         .HasIndex(u => u.UserName)

@@ -231,7 +231,7 @@ namespace DotNetBoilerplate.Api
       services.AddSingleton<IApplicationConfiguration>(o => new ApplicationConfiguration(this.Configuration));
       services.AddSingleton<ICultureProvider, CultureProvider>();
       services.AddSingleton<IEmailProvider, EmailProvider>();
-      services.AddScoped<IPrincipalProvider, PrincipalProvider>();
+      services.AddScoped<INodeProvider, NodeProvider>();
       services.AddScoped<IAccountProvider, AccountProvider>();
       services.AddScoped<IAuditProvider, AuditProvider>();
       services.AddScoped<IUserProvider, UserProvider>();

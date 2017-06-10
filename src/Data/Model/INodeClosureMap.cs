@@ -1,6 +1,6 @@
 namespace DotNetBoilerplate.Data.Model
 {
-  public interface IPrincipalClosureMap
+  public interface INodeClosureMap
   {
     long AncestorId { get; set; }
 
