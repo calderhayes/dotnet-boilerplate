@@ -39,6 +39,13 @@ namespace DotNetBoilerplate.Core.Logic
     /// <returns></returns>
     private ILogger Logger { get; }
 
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="userContext"></param>
+    /// <param name="label"></param>
+    /// <param name="principalType"></param>
+    /// <returns></returns>
     public async Task<Principal> CreatePrincipal(
       IUserContext userContext,
       string label,
@@ -48,6 +55,13 @@ namespace DotNetBoilerplate.Core.Logic
         label, principalType, userContext.AuditTicketId);
     }
 
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="label"></param>
+    /// <param name="principalType"></param>
+    /// <param name="auditTicketId"></param>
+    /// <returns></returns>
     public async Task<Principal> CreatePrincipal(
       string label,
       PrincipalType principalType,
@@ -85,6 +99,14 @@ namespace DotNetBoilerplate.Core.Logic
       return principal;
     }
 
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="ticketId"></param>
+    /// <param name="parentPrincipalId"></param>
+    /// <param name="childPrincipalId"></param>
+    /// <param name="domain"></param>
+    /// <returns></returns>
     public async Task AddChildPrincipal(
       long ticketId,
       long parentPrincipalId,
@@ -134,6 +156,56 @@ namespace DotNetBoilerplate.Core.Logic
       this.DbContext.PrincipalClosureMaps.AddRange(mapsToAdd);
 
       await this.DbContext.SaveChangesAsync();
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="principalId"></param>
+    /// <returns></returns>
+    public async Task<Principal> GetPrincipal(long principalId)
+    {
+      return await this.DbContext.Principals
+        .Where(p => p.Id == principalId)
+        .SingleAsync();
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="principalId"></param>
+    /// <param name="domain"></param>
+    /// <param name="includeTarget"></param>
+    /// <returns></returns>
+    public IQueryable<IPrincipal> GetAncestorsQuery(
+      long principalId, PrincipalClosureMapDomain domain, bool includeTarget)
+    {
+      var query =
+      from maps in this.DbContext.PrincipalClosureMaps
+      join p in this.DbContext.Principals on maps.AncestorId equals p.Id
+      where maps.DescendantId == principalId && maps.Domain == domain && (includeTarget || maps.PathLength != 0)
+      select p;
+
+      return query;
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="principalId"></param>
+    /// <param name="domain"></param>
+    /// <param name="includeTarget"></param>
+    /// <returns></returns>
+    public IQueryable<IPrincipal> GetDescendantsQuery(
+      long principalId, PrincipalClosureMapDomain domain, bool includeTarget)
+    {
+      var query =
+      from maps in this.DbContext.PrincipalClosureMaps
+      join p in this.DbContext.Principals on maps.DescendantId equals p.Id
+      where maps.AncestorId == principalId && maps.Domain == domain && (includeTarget || maps.PathLength != 0)
+      select p;
+
+      return query;
     }
   }
 }
