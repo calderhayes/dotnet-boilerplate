@@ -41,16 +41,6 @@ namespace DotNetBoilerplate.Core.Logic
     public async Task<INode> CreateSecurityProfile(
       IUserContext utx, string label)
     {
-      // Manually enforce unique labels, shouldn't be a big deal for this purpose
-      var exists = await this.DbContext.Nodes
-        .Where(n => n.Label == label && n.NodeType == NodeType.SecurityProfile && !n.IsDeleted)
-        .AnyAsync();
-
-      if (exists)
-      {
-        throw new CoreException("Creating a security profile with a label that already exists");
-      }
-
       return await this.NodeProvider.CreateNode(
         label, NodeType.SecurityProfile, utx.AuditTicketId);
     }

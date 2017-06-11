@@ -75,8 +75,6 @@ namespace DotNetBoilerplate.Core.Utility
     {
       this.Logger.LogDebug("Initializing security profiles");
 
-      // this.SecurityProvider.CreateSecurityProfile()
-
       this.Logger.LogDebug("Security profiles initialized");
     }
 

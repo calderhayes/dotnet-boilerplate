@@ -1,27 +1,33 @@
 namespace DotNetBoilerplate.Data.Entity
 {
+  using System;
   using System.ComponentModel.DataAnnotations;
   using System.ComponentModel.DataAnnotations.Schema;
   using DotNetBoilerplate.Data.Model;
+  using DotNetBoilerplate.Data.Model.Lookup;
   using Microsoft.EntityFrameworkCore;
 
-  public class UserAccount
-    : IUserAccount, INode
+  /// <summary>
+  /// Defines a base node object
+  /// </summary>
+  public abstract class BaseEntity
+    : IBaseEntity
   {
+    /// <summary>
+    /// Primary Key
+    /// </summary>
+    /// <returns></returns>
     [Key]
     public long Id { get; set; }
 
     [Required]
-    public string UserName { get; set; }
+    public Guid ExternalId { get; set; }
 
     [Required]
-    public string Culture { get; set; }
+    public bool IsDeleted { get; set; } = false;
 
     [Required]
     public long CreatedTicketId { get; set; }
-
-    [ForeignKey(nameof(Id))]
-    public Node Node { get; set; }
 
     [ForeignKey(nameof(CreatedTicketId))]
     public AuditTicket CreatedAuditTicket { get; set; }
@@ -32,11 +38,12 @@ namespace DotNetBoilerplate.Data.Entity
     [ForeignKey(nameof(ModifiedTicketId))]
     public AuditTicket ModifiedAuditTicket { get; set; }
 
-    public static void OnModelCreating(ModelBuilder modelBuilder)
+    public static void OnModelCreating<T>(ModelBuilder modelBuilder)
+      where T : BaseEntity
     {
-      modelBuilder.Entity<UserAccount>()
-        .HasIndex(u => u.UserName)
-        .IsUnique();
+      modelBuilder.Entity<T>()
+        .HasIndex(p => new { p.ExternalId })
+        .IsUnique(true);
     }
   }
 }

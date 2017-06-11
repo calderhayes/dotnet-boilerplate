@@ -133,11 +133,9 @@ namespace DotNetBoilerplate.Data
 
       NodeClosureMap.OnModelCreating(builder);
 
-      Node.OnModelCreating(builder);
+      BaseEntity.OnModelCreating<Node>(builder);
 
-      builder.Entity<UserAccount>()
-        .HasIndex(u => u.UserName)
-        .IsUnique();
+      UserAccount.OnModelCreating(builder);
     }
   }
 }
