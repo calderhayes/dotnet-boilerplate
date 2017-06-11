@@ -42,7 +42,7 @@ namespace DotNetBoilerplate.Core.Logic
       IUserContext utx, string label)
     {
       return await this.NodeProvider.CreateNode(
-        label, NodeType.SecurityProfile, utx.AuditTicketId);
+        label, NodeType.User, utx.AuditTicketId);
     }
 
     /// <summary>

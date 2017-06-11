@@ -3,7 +3,6 @@ namespace DotNetBoilerplate.Data.Model.Lookup
   public enum NodeType
     : int
   {
-    User = 0,
-    SecurityProfile = 1
+    User = 0
   }
 }
