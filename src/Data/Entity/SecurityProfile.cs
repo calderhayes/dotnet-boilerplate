@@ -11,7 +11,7 @@ namespace DotNetBoilerplate.Data.Entity
     [Required]
     public string Label { get; set; }
 
-    [IsRequired]
+    [Required]
     public bool IsSystem { get; set; }
   }
 }

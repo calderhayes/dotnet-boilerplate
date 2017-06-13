@@ -10,6 +10,12 @@ namespace DotNetBoilerplate.Data
 
   public interface IDbContext
   {
+    DbSet<SecurityProfileToggleMap> SecurityProfileToggleMaps { get; set; }
+
+    DbSet<SecurityProfileToggle> SecurityProfileToggles { get; set; }
+
+    DbSet<SecurityProfile> SecurityProfiles { get; set; }
+
     DbSet<NodeClosureMap> NodeClosureMaps { get; }
 
     DbSet<Node> Nodes { get; }

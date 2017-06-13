@@ -73,14 +73,45 @@ namespace DotNetBoilerplate.Core.Utility
 
     private void InitializeDatabasePermissions(long ticketId)
     {
-
+      // Non persisted in DB for now
     }
 
     private void InitializeSecurityProfiles(long ticketId)
     {
       this.Logger.LogDebug("Initializing security profiles");
 
+      this.AddSystemSecurityProfileIfDoesNotExist(
+        ticketId, Constants.SystemSecurityProfileLabel.System);
+      this.AddSystemSecurityProfileIfDoesNotExist(
+        ticketId, Constants.SystemSecurityProfileLabel.Anonymous);
+      this.AddSystemSecurityProfileIfDoesNotExist(
+        ticketId, Constants.SystemSecurityProfileLabel.Default);
+
       this.Logger.LogDebug("Security profiles initialized");
+    }
+
+    private void AddSystemSecurityProfileIfDoesNotExist(
+      long ticketId, string label)
+    {
+      var exists = this.DbContext.SecurityProfiles
+        .Where(p => p.IsSystem && p.Label == label)
+        .Any();
+
+      if (!exists)
+      {
+        var profile = new SecurityProfile()
+        {
+          ExternalId = Guid.NewGuid(),
+          Label = label,
+          IsDeleted = false,
+          IsSystem = true,
+          CreatedTicketId = ticketId,
+          ModifiedTicketId = ticketId
+        };
+
+        this.DbContext.SecurityProfiles.Add(profile);
+        this.DbContext.SaveChanges();
+      }
     }
 
     private void InitializeUsers(long ticketId)

@@ -5,11 +5,11 @@ namespace DotNetBoilerplate.Data.Model.Lookup
   {
     // Permission toggles
     CanViewDashboard = 0,
-    CanLogin = 1
+    CanLogin = 1,
 
     // Release toggles
     // Experiment toggles
     // Operational toggles
-    SendLiveEmail = 100,
+    SendLiveEmail = 100
   }
 }

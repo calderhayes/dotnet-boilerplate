@@ -5,7 +5,7 @@ namespace DotNetBoilerplate.Data.Entity
   using DotNetBoilerplate.Data.Model.Lookup;
 
   /// <summary>
-  ///
+  /// Main toggle details
   /// </summary>
   public class SecurityProfileToggle
     : ISecurityProfileToggle
