@@ -63,6 +63,8 @@ namespace DotNetBoilerplate.Core.Utility
 
       var ticket = this.GetInitialTicket();
 
+      this.InitializeDatabasePermissions(ticket.TicketId);
+      this.InitializeSecurityProfiles(ticket.TicketId);
       this.InitializeUsers(ticket.TicketId);
 
       ticket.EndTime = DateTimeOffset.Now;
@@ -133,6 +135,20 @@ namespace DotNetBoilerplate.Core.Utility
 
       if (!userExists)
       {
+        var securityProfileLabel = Constants.SystemSecurityProfileLabel.Default;
+        if (username == SystemUsername.Anonymous)
+        {
+          securityProfileLabel = Constants.SystemSecurityProfileLabel.Anonymous;
+        }
+        else if (username == SystemUsername.System)
+        {
+          securityProfileLabel = Constants.SystemSecurityProfileLabel.System;
+        }
+
+        var profile = this.DbContext.SecurityProfiles
+          .Where(p => p.IsSystem && p.Label == securityProfileLabel)
+          .Single();
+
         var node = new Node()
         {
           ExternalId = Guid.NewGuid(),
@@ -144,21 +160,12 @@ namespace DotNetBoilerplate.Core.Utility
         this.DbContext.Nodes.Add(node);
         this.DbContext.SaveChanges();
 
-        var nodeClosureMap = new NodeClosureMap()
-        {
-          AncestorId = node.Id,
-          DescendantId = node.Id,
-          PathLength = 0,
-          CreatedTicketId = ticketId
-        };
-        this.DbContext.NodeClosureMaps.Add(nodeClosureMap);
-        this.DbContext.SaveChanges();
-
         var user = new UserAccount()
         {
           Id = node.Id,
           UserName = username,
           Culture = this.DefaultCulture,
+          SecurityProfileId = profile.Id,
           CreatedTicketId = ticketId,
           ModifiedTicketId = ticketId
         };

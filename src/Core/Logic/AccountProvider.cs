@@ -107,11 +107,17 @@ namespace DotNetBoilerplate.Core.Logic
       this.DbContext.Nodes.Add(node);
       await this.DbContext.SaveChangesAsync();
 
+      var defaultProfileId = await this.DbContext.SecurityProfiles
+        .Where(p => p.IsSystem && p.Label == Constants.SystemSecurityProfileLabel.Default)
+        .Select(p => p.Id)
+        .SingleAsync();
+
       var userAccount = new UserAccount()
       {
         Id = node.Id,
         UserName = username,
         Culture = locale,
+        SecurityProfileId = defaultProfileId,
         CreatedTicketId = auditTicketId,
         ModifiedTicketId = auditTicketId
       };

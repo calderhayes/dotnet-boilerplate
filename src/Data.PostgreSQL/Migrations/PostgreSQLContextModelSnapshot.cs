@@ -142,6 +142,66 @@ namespace Data.PostgreSQL.Migrations
                     b.ToTable("ResponseLogs");
                 });
 
+            modelBuilder.Entity("DotNetBoilerplate.Data.Entity.SecurityProfile", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<long>("CreatedTicketId");
+
+                    b.Property<Guid>("ExternalId");
+
+                    b.Property<bool>("IsDeleted");
+
+                    b.Property<bool>("IsSystem");
+
+                    b.Property<string>("Label")
+                        .IsRequired();
+
+                    b.Property<long>("ModifiedTicketId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CreatedTicketId");
+
+                    b.HasIndex("ExternalId")
+                        .IsUnique();
+
+                    b.HasIndex("ModifiedTicketId");
+
+                    b.ToTable("SecurityProfiles");
+                });
+
+            modelBuilder.Entity("DotNetBoilerplate.Data.Entity.SecurityProfileToggle", b =>
+                {
+                    b.Property<int>("ToggleType");
+
+                    b.Property<int>("Category");
+
+                    b.Property<bool>("IsDynamic");
+
+                    b.Property<bool>("IsEnabled");
+
+                    b.HasKey("ToggleType");
+
+                    b.ToTable("SecurityProfileToggles");
+                });
+
+            modelBuilder.Entity("DotNetBoilerplate.Data.Entity.SecurityProfileToggleMap", b =>
+                {
+                    b.Property<long>("SecurityProfileId");
+
+                    b.Property<int>("ToggleType");
+
+                    b.Property<bool>("IsEnabled");
+
+                    b.HasKey("SecurityProfileId", "ToggleType");
+
+                    b.HasIndex("ToggleType");
+
+                    b.ToTable("SecurityProfileToggleMaps");
+                });
+
             modelBuilder.Entity("DotNetBoilerplate.Data.Entity.UserAccount", b =>
                 {
                     b.Property<long>("Id");
@@ -153,6 +213,8 @@ namespace Data.PostgreSQL.Migrations
 
                     b.Property<long>("ModifiedTicketId");
 
+                    b.Property<long>("SecurityProfileId");
+
                     b.Property<string>("UserName")
                         .IsRequired();
 
@@ -161,6 +223,8 @@ namespace Data.PostgreSQL.Migrations
                     b.HasIndex("CreatedTicketId");
 
                     b.HasIndex("ModifiedTicketId");
+
+                    b.HasIndex("SecurityProfileId");
 
                     b.HasIndex("UserName")
                         .IsUnique();
@@ -245,6 +309,32 @@ namespace Data.PostgreSQL.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
+            modelBuilder.Entity("DotNetBoilerplate.Data.Entity.SecurityProfile", b =>
+                {
+                    b.HasOne("DotNetBoilerplate.Data.Entity.AuditTicket", "CreatedAuditTicket")
+                        .WithMany()
+                        .HasForeignKey("CreatedTicketId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DotNetBoilerplate.Data.Entity.AuditTicket", "ModifiedAuditTicket")
+                        .WithMany()
+                        .HasForeignKey("ModifiedTicketId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("DotNetBoilerplate.Data.Entity.SecurityProfileToggleMap", b =>
+                {
+                    b.HasOne("DotNetBoilerplate.Data.Entity.SecurityProfile", "SecurityProfile")
+                        .WithMany()
+                        .HasForeignKey("SecurityProfileId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DotNetBoilerplate.Data.Entity.SecurityProfileToggle", "Toggle")
+                        .WithMany()
+                        .HasForeignKey("ToggleType")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("DotNetBoilerplate.Data.Entity.UserAccount", b =>
                 {
                     b.HasOne("DotNetBoilerplate.Data.Entity.AuditTicket", "CreatedAuditTicket")
@@ -260,6 +350,11 @@ namespace Data.PostgreSQL.Migrations
                     b.HasOne("DotNetBoilerplate.Data.Entity.AuditTicket", "ModifiedAuditTicket")
                         .WithMany()
                         .HasForeignKey("ModifiedTicketId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("DotNetBoilerplate.Data.Entity.SecurityProfile", "SecurityProfile")
+                        .WithMany()
+                        .HasForeignKey("SecurityProfileId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

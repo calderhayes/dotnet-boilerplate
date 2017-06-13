@@ -32,6 +32,20 @@ namespace Data.PostgreSQL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SecurityProfileToggles",
+                columns: table => new
+                {
+                    ToggleType = table.Column<int>(nullable: false),
+                    Category = table.Column<int>(nullable: false),
+                    IsDynamic = table.Column<bool>(nullable: false),
+                    IsEnabled = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SecurityProfileToggles", x => x.ToggleType);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "HubLogs",
                 columns: table => new
                 {
@@ -121,6 +135,36 @@ namespace Data.PostgreSQL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SecurityProfiles",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.SerialColumn),
+                    CreatedTicketId = table.Column<long>(nullable: false),
+                    ExternalId = table.Column<Guid>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false),
+                    IsSystem = table.Column<bool>(nullable: false),
+                    Label = table.Column<string>(nullable: false),
+                    ModifiedTicketId = table.Column<long>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SecurityProfiles", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_SecurityProfiles_AuditTickets_CreatedTicketId",
+                        column: x => x.CreatedTicketId,
+                        principalTable: "AuditTickets",
+                        principalColumn: "TicketId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SecurityProfiles_AuditTickets_ModifiedTicketId",
+                        column: x => x.ModifiedTicketId,
+                        principalTable: "AuditTickets",
+                        principalColumn: "TicketId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "NodeClosureMaps",
                 columns: table => new
                 {
@@ -154,6 +198,31 @@ namespace Data.PostgreSQL.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "SecurityProfileToggleMaps",
+                columns: table => new
+                {
+                    SecurityProfileId = table.Column<long>(nullable: false),
+                    ToggleType = table.Column<int>(nullable: false),
+                    IsEnabled = table.Column<bool>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_SecurityProfileToggleMaps", x => new { x.SecurityProfileId, x.ToggleType });
+                    table.ForeignKey(
+                        name: "FK_SecurityProfileToggleMaps_SecurityProfiles_SecurityProfileId",
+                        column: x => x.SecurityProfileId,
+                        principalTable: "SecurityProfiles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_SecurityProfileToggleMaps_SecurityProfileToggles_ToggleType",
+                        column: x => x.ToggleType,
+                        principalTable: "SecurityProfileToggles",
+                        principalColumn: "ToggleType",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserAccounts",
                 columns: table => new
                 {
@@ -161,6 +230,7 @@ namespace Data.PostgreSQL.Migrations
                     CreatedTicketId = table.Column<long>(nullable: false),
                     Culture = table.Column<string>(nullable: false),
                     ModifiedTicketId = table.Column<long>(nullable: false),
+                    SecurityProfileId = table.Column<long>(nullable: false),
                     UserName = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -183,6 +253,12 @@ namespace Data.PostgreSQL.Migrations
                         column: x => x.ModifiedTicketId,
                         principalTable: "AuditTickets",
                         principalColumn: "TicketId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserAccounts_SecurityProfiles_SecurityProfileId",
+                        column: x => x.SecurityProfileId,
+                        principalTable: "SecurityProfiles",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
@@ -251,6 +327,27 @@ namespace Data.PostgreSQL.Migrations
                 column: "DescendantId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_SecurityProfiles_CreatedTicketId",
+                table: "SecurityProfiles",
+                column: "CreatedTicketId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SecurityProfiles_ExternalId",
+                table: "SecurityProfiles",
+                column: "ExternalId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SecurityProfiles_ModifiedTicketId",
+                table: "SecurityProfiles",
+                column: "ModifiedTicketId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SecurityProfileToggleMaps_ToggleType",
+                table: "SecurityProfileToggleMaps",
+                column: "ToggleType");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserAccounts_CreatedTicketId",
                 table: "UserAccounts",
                 column: "CreatedTicketId");
@@ -259,6 +356,11 @@ namespace Data.PostgreSQL.Migrations
                 name: "IX_UserAccounts_ModifiedTicketId",
                 table: "UserAccounts",
                 column: "ModifiedTicketId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAccounts_SecurityProfileId",
+                table: "UserAccounts",
+                column: "SecurityProfileId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserAccounts_UserName",
@@ -297,13 +399,22 @@ namespace Data.PostgreSQL.Migrations
                 name: "ResponseLogs");
 
             migrationBuilder.DropTable(
+                name: "SecurityProfileToggleMaps");
+
+            migrationBuilder.DropTable(
                 name: "UserAuthenticationSources");
+
+            migrationBuilder.DropTable(
+                name: "SecurityProfileToggles");
 
             migrationBuilder.DropTable(
                 name: "UserAccounts");
 
             migrationBuilder.DropTable(
                 name: "Nodes");
+
+            migrationBuilder.DropTable(
+                name: "SecurityProfiles");
 
             migrationBuilder.DropTable(
                 name: "AuditTickets");

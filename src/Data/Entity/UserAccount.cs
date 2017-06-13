@@ -18,6 +18,12 @@ namespace DotNetBoilerplate.Data.Entity
     public string Culture { get; set; }
 
     [Required]
+    public long SecurityProfileId { get; set; }
+
+    [ForeignKey(nameof(SecurityProfileId))]
+    public SecurityProfile SecurityProfile { get; set; }
+
+    [Required]
     public long CreatedTicketId { get; set; }
 
     [ForeignKey(nameof(Id))]
