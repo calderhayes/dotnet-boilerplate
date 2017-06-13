@@ -10,5 +10,8 @@ namespace DotNetBoilerplate.Data.Entity
   {
     [Required]
     public string Label { get; set; }
+
+    [IsRequired]
+    public bool IsSystem { get; set; }
   }
 }

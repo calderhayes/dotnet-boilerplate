@@ -1,14 +1,15 @@
 namespace DotNetBoilerplate.Data.Entity
 {
   using System.ComponentModel.DataAnnotations;
+  using DotNetBoilerplate.Data.Model;
   using DotNetBoilerplate.Data.Model.Lookup;
 
   /// <summary>
-  /// Defines a base node object
+  ///
   /// </summary>
   public class SecurityProfileToggle
+    : ISecurityProfileToggle
   {
-    // GLOBAL AND USER SCOPE?
     [Key]
     public SecurityProfileToggleType ToggleType { get; set; }
 
@@ -19,8 +20,10 @@ namespace DotNetBoilerplate.Data.Entity
     /// Handles the global toggling
     /// </summary>
     /// <returns></returns>
+    [Required]
     public bool IsEnabled { get; set; }
 
+    [Required]
     public bool IsDynamic { get; set; }
   }
 }

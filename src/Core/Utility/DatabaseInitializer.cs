@@ -71,6 +71,11 @@ namespace DotNetBoilerplate.Core.Utility
       this.Logger.LogDebug("Database initialized");
     }
 
+    private void InitializeDatabasePermissions(long ticketId)
+    {
+
+    }
+
     private void InitializeSecurityProfiles(long ticketId)
     {
       this.Logger.LogDebug("Initializing security profiles");

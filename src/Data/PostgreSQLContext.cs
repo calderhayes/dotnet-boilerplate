@@ -17,6 +17,12 @@ namespace DotNetBoilerplate.Data
     {
     }
 
+    public DbSet<SecurityProfileToggleMap> SecurityProfileToggleMaps { get; set; }
+
+    public DbSet<SecurityProfileToggle> SecurityProfileToggles { get; set; }
+
+    public DbSet<SecurityProfile> SecurityProfiles { get; set; }
+
     public DbSet<NodeClosureMap> NodeClosureMaps { get; set; }
 
     public DbSet<Node> Nodes { get; set; }
@@ -131,11 +137,15 @@ namespace DotNetBoilerplate.Data
 
       UserAuthenticationSource.OnModelCreating(builder);
 
+      BaseEntity.OnModelCreating<SecurityProfile>(builder);
+
       NodeClosureMap.OnModelCreating(builder);
 
       BaseEntity.OnModelCreating<Node>(builder);
 
       UserAccount.OnModelCreating(builder);
+
+      SecurityProfileToggleMap.OnModelCreating(builder);
     }
   }
 }
