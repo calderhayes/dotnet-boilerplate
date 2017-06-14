@@ -183,7 +183,7 @@ namespace DotNetBoilerplate.Api.Controllers
         Timestamp = DateTimeOffset.Now,
         Database = databaseTest,
         RemoteIpAddress = remoteIpAddress.ToString(),
-        Name = this.User.Identity.Name,
+        IsAuthenticated = this.User.Identity.IsAuthenticated,
         Culture = this.UserContext.UserAccount.Culture,
         Claims = claims
       });
