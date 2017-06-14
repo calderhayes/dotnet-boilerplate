@@ -1,5 +1,6 @@
 namespace DotNetBoilerplate.Core.Model
 {
+  using System.Collections.Generic;
   using DotNetBoilerplate.Data.Model;
 
   public interface IUserContext
@@ -13,5 +14,7 @@ namespace DotNetBoilerplate.Core.Model
     IAuditTicket AuditTicket { get; }
 
     bool IsAnonymous { get; }
+
+    IList<ISecurityProfileToggle> SecurityToggles { get; }
   }
 }

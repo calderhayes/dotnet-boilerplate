@@ -7,5 +7,7 @@ namespace DotNetBoilerplate.Data.Model
     string UserName { get; set; }
 
     string Culture { get; set; }
+
+    long SecurityProfileId { get; set; }
   }
 }

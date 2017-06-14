@@ -1,5 +1,6 @@
 namespace DotNetBoilerplate.Core.Logic
 {
+  using System.Collections.Generic;
   using System.Threading.Tasks;
   using DotNetBoilerplate.Core.Model;
   using DotNetBoilerplate.Data.Model;
@@ -9,5 +10,8 @@ namespace DotNetBoilerplate.Core.Logic
   {
     Task<bool> IsToggleEnabled(
       long securityProfileId, SecurityProfileToggleType type);
+
+    Task<IList<ISecurityProfileToggle>> GetProfileToggles(
+      long securityProfileId);
   }
 }

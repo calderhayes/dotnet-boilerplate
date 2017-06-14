@@ -22,6 +22,8 @@ namespace DotNetBoilerplate.Core.Logic
       this.Logger = logger;
       this.DbContext = dbContext;
       this.NodeProvider = nodeProvider;
+
+      this.MasterToggles = GetMasterToggles();
     }
 
     private IDbContext DbContext { get; }
@@ -35,6 +37,24 @@ namespace DotNetBoilerplate.Core.Logic
     private INodeProvider NodeProvider { get; }
 
     /// <summary>
+    /// Cached master toggles (should be runtime based right now)
+    /// </summary>
+    /// <returns></returns>
+    private IList<ISecurityProfileToggle> MasterToggles { get; }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="userContext"></param>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    public bool IsToggleEnabled(
+      IUserContext userContext, SecurityProfileToggleType type)
+    {
+      return this.IsToggleEnabled(userContext.SecurityToggles, type);
+    }
+
+    /// <summary>
     ///
     /// </summary>
     /// <param name="securityProfileId"></param>
@@ -43,7 +63,19 @@ namespace DotNetBoilerplate.Core.Logic
     public async Task<bool> IsToggleEnabled(
       long securityProfileId, SecurityProfileToggleType type)
     {
-      var masterToggle = GetMasterToggles()
+      var toggles = await this.GetProfileToggles(securityProfileId);
+      return this.IsToggleEnabled(toggles, type);
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="toggles"></param>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    private bool IsToggleEnabled(IList<ISecurityProfileToggle> toggles, SecurityProfileToggleType type)
+    {
+      var masterToggle = this.MasterToggles
         .Where(t => t.ToggleType == type)
         .Single();
 
@@ -52,12 +84,40 @@ namespace DotNetBoilerplate.Core.Logic
         return false;
       }
 
-      var toggles = await this.GetProfileToggles(securityProfileId);
       var toggle = toggles
         .Where(t => t.ToggleType == type)
         .Single();
 
       return toggle.IsEnabled;
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="securityProfileId"></param>
+    /// <returns></returns>
+    public async Task<IList<ISecurityProfileToggle>> GetProfileToggles(
+      long securityProfileId)
+    {
+      // Non-persistant implementation for now
+      var profile = await this.DbContext.SecurityProfiles
+        .Where(s => s.Id == securityProfileId)
+        .SingleAsync();
+
+      if (profile.IsSystem)
+      {
+        switch (profile.Label)
+        {
+          case Constants.SystemSecurityProfileLabel.System:
+            return GetSystemToggles();
+          case Constants.SystemSecurityProfileLabel.Default:
+            return GetDefaultToggles();
+          case Constants.SystemSecurityProfileLabel.Anonymous:
+            return GetAnonymousToggles();
+        }
+      }
+
+      throw new CoreException("Security Profile not found");
     }
 
         /// <summary>
@@ -172,35 +232,6 @@ namespace DotNetBoilerplate.Core.Logic
           IsDynamic = true
         }
       };
-    }
-
-    /// <summary>
-    ///
-    /// </summary>
-    /// <param name="securityProfileId"></param>
-    /// <returns></returns>
-    private async Task<IList<ISecurityProfileToggle>> GetProfileToggles(
-      long securityProfileId)
-    {
-      // Non-persistant implementation for now
-      var profile = await this.DbContext.SecurityProfiles
-        .Where(s => s.Id == securityProfileId)
-        .SingleAsync();
-
-      if (profile.IsSystem)
-      {
-        switch (profile.Label)
-        {
-          case Constants.SystemSecurityProfileLabel.System:
-            return GetSystemToggles();
-          case Constants.SystemSecurityProfileLabel.Default:
-            return GetDefaultToggles();
-          case Constants.SystemSecurityProfileLabel.Anonymous:
-            return GetAnonymousToggles();
-        }
-      }
-
-      throw new CoreException("Security Profile not found");
     }
   }
 }

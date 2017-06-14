@@ -1,5 +1,7 @@
 namespace DotNetBoilerplate.Core.Model
 {
+  using System;
+  using System.Collections.Generic;
   using DotNetBoilerplate.Data.Model;
 
   /// <summary>
@@ -14,14 +16,17 @@ namespace DotNetBoilerplate.Core.Model
     /// <param name="userAccount"></param>
     /// <param name="auditTicket"></param>
     /// <param name="isAnonymous"></param>
+    /// <param name="securityToggles"></param>
     public UserContext(
       IUserAccount userAccount,
       IAuditTicket auditTicket,
-      bool isAnonymous)
+      bool isAnonymous,
+      IList<ISecurityProfileToggle> securityToggles)
     {
       this.UserAccount = userAccount;
       this.AuditTicket = auditTicket;
       this.IsAnonymous = isAnonymous;
+      this.SecurityToggles = securityToggles;
     }
 
     /// <summary>
@@ -51,5 +56,11 @@ namespace DotNetBoilerplate.Core.Model
     /// </summary>
     /// <returns></returns>
     public IUserAccount UserAccount { get; private set; }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <returns></returns>
+    public IList<ISecurityProfileToggle> SecurityToggles { get; }
   }
 }

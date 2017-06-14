@@ -38,18 +38,21 @@ namespace DotNetBoilerplate.Api.Utility
     /// <param name="context"></param>
     /// <param name="accountProvider"></param>
     /// <param name="auditProvider"></param>
+    /// <param name="securityProvider"></param>
     /// <param name="applicationConfigurtaion"></param>
     /// <returns></returns>
     public async Task Invoke(
       HttpContext context,
       IAccountProvider accountProvider,
       IAuditProvider auditProvider,
+      ISecurityProvider securityProvider,
       IApplicationConfiguration applicationConfigurtaion)
     {
       var userContext = await this.CreateUserContext(
         context,
         accountProvider,
         auditProvider,
+        securityProvider,
         applicationConfigurtaion);
 
       this.logger.LogInformation("User context has been created");
@@ -71,12 +74,14 @@ namespace DotNetBoilerplate.Api.Utility
     /// <param name="context"></param>
     /// <param name="accountProvider"></param>
     /// <param name="auditProvider"></param>
+    /// <param name="securityProvider"></param>
     /// <param name="applicationConfigurtaion"></param>
     /// <returns></returns>
     private async Task<UserContext> CreateUserContext(
       HttpContext context,
       IAccountProvider accountProvider,
       IAuditProvider auditProvider,
+      ISecurityProvider securityProvider,
       IApplicationConfiguration applicationConfigurtaion)
     {
       var claimsPrincipal = context.User;
@@ -195,7 +200,9 @@ namespace DotNetBoilerplate.Api.Utility
         authSource,
         authSubjectId);
 
-      return new UserContext(userAccount, requestTicket, isAnonymous);
+      var toggles = await securityProvider.GetProfileToggles(userAccount.SecurityProfileId);
+
+      return new UserContext(userAccount, requestTicket, isAnonymous, toggles);
     }
 
     /// <summary>
