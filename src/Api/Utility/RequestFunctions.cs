@@ -101,7 +101,7 @@ namespace DotNetBoilerplate.Api.Utility
           return new
           {
             Value = split[0],
-            Weight = split.Length > 1 ? decimal.Parse(split[1]) : 1M
+            Weight = split.Length > 1 ? decimal.Parse(split[1].Replace("q=", string.Empty)) : 1M
           };
         })
         .OrderByDescending(v => v.Weight);
