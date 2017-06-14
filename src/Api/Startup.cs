@@ -6,6 +6,7 @@ namespace DotNetBoilerplate.Api
   using DotNetBoilerplate.Api.Utility;
   using DotNetBoilerplate.Core.Constants;
   using DotNetBoilerplate.Core.Logic;
+  using DotNetBoilerplate.Core.Logic.Email;
   using DotNetBoilerplate.Core.Model;
   using DotNetBoilerplate.Data;
   using DotNetBoilerplate.File;
@@ -230,7 +231,8 @@ namespace DotNetBoilerplate.Api
     {
       services.AddSingleton<IApplicationConfiguration>(o => new ApplicationConfiguration(this.Configuration));
       services.AddSingleton<ICultureProvider, CultureProvider>();
-      services.AddSingleton<IEmailProvider, EmailProvider>();
+      services.AddScoped<ISecurityProvider, SecurityProvider>();
+      services.AddScoped<IEmailProviderFactory, EmailProviderFactory>();
       services.AddScoped<INodeProvider, NodeProvider>();
       services.AddScoped<IAccountProvider, AccountProvider>();
       services.AddScoped<IAuditProvider, AuditProvider>();

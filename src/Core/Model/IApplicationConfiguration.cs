@@ -19,6 +19,8 @@ namespace DotNetBoilerplate.Core.Model
 
     IList<string> SupportedCultures { get; }
 
-    ISmtpOptions SmtpOptions { get; }
+    ISmtpOptions LiveSmtpOptions { get; }
+
+    ISmtpOptions DummySmtpOptions { get; }
   }
 }

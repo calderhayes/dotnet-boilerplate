@@ -2,7 +2,7 @@ namespace DotNetBoilerplate.Core.Model
 {
   public interface ISmtpOptions
   {
-    bool IsEmailEnabled { get; }
+    string TargetName { get; }
 
     string Host { get; }
 

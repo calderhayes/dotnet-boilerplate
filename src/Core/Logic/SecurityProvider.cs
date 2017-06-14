@@ -70,30 +70,6 @@ namespace DotNetBoilerplate.Core.Logic
     /// <summary>
     ///
     /// </summary>
-    /// <param name="toggles"></param>
-    /// <param name="type"></param>
-    /// <returns></returns>
-    private bool IsToggleEnabled(IList<ISecurityProfileToggle> toggles, SecurityProfileToggleType type)
-    {
-      var masterToggle = this.MasterToggles
-        .Where(t => t.ToggleType == type)
-        .Single();
-
-      if (!masterToggle.IsEnabled)
-      {
-        return false;
-      }
-
-      var toggle = toggles
-        .Where(t => t.ToggleType == type)
-        .Single();
-
-      return toggle.IsEnabled;
-    }
-
-    /// <summary>
-    ///
-    /// </summary>
     /// <param name="securityProfileId"></param>
     /// <returns></returns>
     public async Task<IList<ISecurityProfileToggle>> GetProfileToggles(
@@ -120,7 +96,7 @@ namespace DotNetBoilerplate.Core.Logic
       throw new CoreException("Security Profile not found");
     }
 
-        /// <summary>
+    /// <summary>
     /// For the anonymous user
     /// </summary>
     /// <returns></returns>
@@ -232,6 +208,30 @@ namespace DotNetBoilerplate.Core.Logic
           IsDynamic = true
         }
       };
+    }
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="toggles"></param>
+    /// <param name="type"></param>
+    /// <returns></returns>
+    private bool IsToggleEnabled(IList<ISecurityProfileToggle> toggles, SecurityProfileToggleType type)
+    {
+      var masterToggle = this.MasterToggles
+        .Where(t => t.ToggleType == type)
+        .Single();
+
+      if (!masterToggle.IsEnabled)
+      {
+        return false;
+      }
+
+      var toggle = toggles
+        .Where(t => t.ToggleType == type)
+        .Single();
+
+      return toggle.IsEnabled;
     }
   }
 }

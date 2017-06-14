@@ -38,16 +38,11 @@ namespace DotNetBoilerplate.Core.Model
         .Bind(values);
       this.CorsAllowedOrigins = values;
 
-      var smtpOptions = new SmtpOptions()
-      {
-        IsEmailEnabled = this.ApplicationConfigurationSection.GetValue<bool>("IsEmailEnabled"),
-        Host = this.ApplicationConfigurationSection.GetValue<string>("SmtpHost"),
-        Port = this.ApplicationConfigurationSection.GetValue<int>("SmtpPort"),
-        UserName = this.ApplicationConfigurationSection.GetValue<string>("SmtpUserName"),
-        Password = this.ApplicationConfigurationSection.GetValue<string>("SmtpPassword"),
-        DefaultFromEmailAddress = this.ApplicationConfigurationSection.GetValue<string>("DefaultFromEmailAddress")
-      };
-      this.SmtpOptions = smtpOptions;
+      var liveSmtpSection = this.ApplicationConfigurationSection.GetSection("LiveSmtp");
+      this.LiveSmtpOptions = BuildSmtpOptions(liveSmtpSection);
+
+      var dummySmtpSection = this.ApplicationConfigurationSection.GetSection("DummySmtp");
+      this.DummySmtpOptions = BuildSmtpOptions(dummySmtpSection);
     }
 
     public EnvironmentType Environment { get; }
@@ -74,11 +69,29 @@ namespace DotNetBoilerplate.Core.Model
 
     public IList<string> SupportedCultures { get; }
 
-    public ISmtpOptions SmtpOptions { get; }
+    public ISmtpOptions LiveSmtpOptions { get; }
+
+    public ISmtpOptions DummySmtpOptions { get; }
 
     private IConfigurationRoot Configuration { get; }
 
     private IConfigurationSection ApplicationConfigurationSection =>
       this.Configuration.GetSection("Application");
+
+    /// <summary>
+    ///
+    /// </summary>
+    /// <param name="section"></param>
+    /// <returns></returns>
+    private static SmtpOptions BuildSmtpOptions(IConfigurationSection section)
+    {
+      return new SmtpOptions(
+        section.GetValue<string>("TargetName"),
+        section.GetValue<string>("Host"),
+        section.GetValue<int>("POrt"),
+        section.GetValue<string>("UserName"),
+        section.GetValue<string>("Password"),
+        section.GetValue<string>("DefaultFromEmailAddress"));
+    }
   }
 }

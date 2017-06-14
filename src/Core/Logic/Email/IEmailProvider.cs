@@ -1,4 +1,4 @@
-namespace DotNetBoilerplate.Core.Logic
+namespace DotNetBoilerplate.Core.Logic.Email
 {
   using System.Threading.Tasks;
 

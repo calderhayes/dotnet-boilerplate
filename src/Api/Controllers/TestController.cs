@@ -5,6 +5,7 @@ namespace DotNetBoilerplate.Api.Controllers
   using System.Threading.Tasks;
   using DotNetBoilerplate.Core;
   using DotNetBoilerplate.Core.Logic;
+  using DotNetBoilerplate.Core.Logic.Email;
   using DotNetBoilerplate.Data;
   using DotNetBoilerplate.File;
   using Microsoft.AspNetCore.Authorization;
@@ -24,26 +25,26 @@ namespace DotNetBoilerplate.Api.Controllers
     /// <param name="dbContext"></param>
     /// <param name="cultureProvider"></param>
     /// <param name="fileControl"></param>
-    /// <param name="emailProvider"></param>
+    /// <param name="emailProviderFactory"></param>
     public TestController(
       IUserProvider userProvider,
       IDbContext dbContext,
       ICultureProvider cultureProvider,
       IFileControl fileControl,
-      IEmailProvider emailProvider)
+      IEmailProviderFactory emailProviderFactory)
     {
       this.UserProvider = userProvider;
       this.DbContext = dbContext;
       this.CultureProvider = cultureProvider;
       this.FileControl = fileControl;
-      this.EmailProvider = emailProvider;
+      this.EmailProviderFactory = emailProviderFactory;
     }
 
     /// <summary>
     ///
     /// </summary>
     /// <returns></returns>
-    private IEmailProvider EmailProvider { get; }
+    private IEmailProviderFactory EmailProviderFactory { get; }
 
     /// <summary>
     ///
@@ -140,7 +141,8 @@ namespace DotNetBoilerplate.Api.Controllers
     [Route("emailTest")]
     public async Task<IActionResult> EmailTest()
     {
-      await this.EmailProvider.SendTestEmail();
+      var provider = this.EmailProviderFactory.Create(this.UserContext);
+      await provider.SendTestEmail();
       return this.Ok();
     }
 

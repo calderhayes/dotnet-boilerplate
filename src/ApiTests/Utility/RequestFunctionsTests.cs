@@ -1,5 +1,6 @@
 ﻿namespace DotNetBoilerplate.Api.Utility.Tests
 {
+  using System.Collections.Generic;
   using Microsoft.AspNetCore.Http;
   using Microsoft.Extensions.Primitives;
   using Xunit;
@@ -34,6 +35,22 @@
       httpContext.Request.Headers.Add(headerName, headerValue);
       var val = RequestFunctions.GetHeaderValueAs<string>(httpContext, headerName);
       Assert.True(headerValue.ToString() == val, "Must retrieve the correct header values");
+    }
+
+    [Fact]
+    public void ParseCulture_BasicBrowserHeader()
+    {
+      StringValues rawCultures = "en-US,en;q=0.5";
+      var supportedCultures = new List<string>()
+      {
+        "en-CA",
+        "en-US",
+        "fr-CA"
+      };
+
+      var match = RequestFunctions.ParseCulture(rawCultures, supportedCultures);
+
+      Assert.Equal("en-CA", match);
     }
   }
 }

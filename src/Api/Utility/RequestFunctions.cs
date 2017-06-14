@@ -90,5 +90,45 @@ namespace DotNetBoilerplate.Api.Utility
 
       return default(T);
     }
+
+    public static string ParseCulture(
+      StringValues rawCultures, IList<string> supportedCultures)
+    {
+      var valuesAndWeights = rawCultures
+        .Select(v =>
+        {
+          var split = v.Split(';');
+          return new
+          {
+            Value = split[0],
+            Weight = split.Length > 1 ? decimal.Parse(split[1]) : 1M
+          };
+        })
+        .OrderByDescending(v => v.Weight);
+
+      foreach (var vw in valuesAndWeights)
+      {
+        var match = supportedCultures
+          .Where(s => s.Equals(vw.Value, StringComparison.OrdinalIgnoreCase))
+          .FirstOrDefault();
+
+        if (match != null)
+        {
+          return match;
+        }
+
+        var language = vw.Value.Substring(0, 2);
+        match = supportedCultures
+          .Where(s => s.Substring(0, 2).Equals(language, StringComparison.OrdinalIgnoreCase))
+          .FirstOrDefault();
+
+        if (match != null)
+        {
+          return match;
+        }
+      }
+
+      return null;
+    }
   }
 }

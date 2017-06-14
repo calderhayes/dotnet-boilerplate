@@ -1,4 +1,4 @@
-namespace DotNetBoilerplate.Core.Logic
+namespace DotNetBoilerplate.Core.Logic.Email
 {
   using System.Threading.Tasks;
   using DotNetBoilerplate.Core.Model;
@@ -15,13 +15,13 @@ namespace DotNetBoilerplate.Core.Logic
     /// <summary>
     ///
     /// </summary>
-    /// <param name="config"></param>
+    /// <param name="options"></param>
     /// <param name="logger"></param>
     public EmailProvider(
-      IApplicationConfiguration config,
+      ISmtpOptions options,
       ILogger<EmailProvider> logger)
     {
-      this.Configuration = config;
+      this.SmtpOptions = options;
       this.Logger = logger;
     }
 
@@ -35,7 +35,7 @@ namespace DotNetBoilerplate.Core.Logic
     ///
     /// </summary>
     /// <returns></returns>
-    private IApplicationConfiguration Configuration { get; }
+    private ISmtpOptions SmtpOptions { get; }
 
     /// <summary>
     ///
@@ -44,7 +44,7 @@ namespace DotNetBoilerplate.Core.Logic
     public Task SendTestEmail()
     {
       var message = new MimeMessage();
-      message.From.Add(new MailboxAddress("System", this.Configuration.SmtpOptions.DefaultFromEmailAddress));
+      message.From.Add(new MailboxAddress("System", this.SmtpOptions.DefaultFromEmailAddress));
       message.To.Add(new MailboxAddress("Mrs. Chanandler Bong", "caldertest123@mailinator.com"));
       message.Subject = "How you doin'?";
 
@@ -67,13 +67,7 @@ I just wanted to let you know that Monica and I were going to go play some paint
     /// <returns></returns>
     private async Task SendMessage(MimeMessage message)
     {
-      var smtpOptions = this.Configuration.SmtpOptions;
-
-      if (!smtpOptions.IsEmailEnabled)
-      {
-        this.Logger.LogWarning("Emails have been disabled, the following will not be sent: subject {0}", message.Subject);
-        return;
-      }
+      var smtpOptions = this.SmtpOptions;
 
       using (var client = new SmtpClient())
       {

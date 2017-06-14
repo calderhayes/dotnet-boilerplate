@@ -13,5 +13,8 @@ namespace DotNetBoilerplate.Core.Logic
 
     Task<IList<ISecurityProfileToggle>> GetProfileToggles(
       long securityProfileId);
+
+    bool IsToggleEnabled(
+      IUserContext userContext, SecurityProfileToggleType type);
   }
 }

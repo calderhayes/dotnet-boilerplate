@@ -224,38 +224,12 @@ namespace DotNetBoilerplate.Api.Utility
         var rawCultures = context.Request.Headers["Accept-Language"];
         try
         {
-          var valuesAndWeights = rawCultures
-            .Select(v =>
-            {
-              var split = v.Split(';');
-              return new
-              {
-                Value = split[0],
-                Weight = split.Length > 1 ? decimal.Parse(split[1]) : 1M
-              };
-            })
-            .OrderByDescending(v => v.Weight);
+          var match = RequestFunctions.ParseCulture(
+            rawCultures, applicationConfigurtaion.SupportedCultures);
 
-          foreach (var vw in valuesAndWeights)
+          if (match != null)
           {
-            var match = applicationConfigurtaion.SupportedCultures
-              .Where(s => s.Equals(vw.Value, StringComparison.OrdinalIgnoreCase))
-              .FirstOrDefault();
-
-            if (match != null)
-            {
-              return match;
-            }
-
-            var language = vw.Value.Substring(0, 2);
-            match = applicationConfigurtaion.SupportedCultures
-              .Where(s => s.Substring(0, 2).Equals(language, StringComparison.OrdinalIgnoreCase))
-              .FirstOrDefault();
-
-            if (match != null)
-            {
-              return match;
-            }
+            return match;
           }
 
           return applicationConfigurtaion.DefaultCulture;
