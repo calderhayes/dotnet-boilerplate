@@ -24,7 +24,7 @@ namespace DotNetBoilerplate.Auth.OAuthEntity
             new Secret(authConfig.GetValue<string>("ClientSecret").Sha512())
           },
           AllowedScopes = scopes,
-          AllowedCorsOrigins = new List<string>() { "http://localhost:8080" }
+          AllowedCorsOrigins = new List<string>() { "http://localhost:8080", "https://localhost:8080" }
         }
       };
     }

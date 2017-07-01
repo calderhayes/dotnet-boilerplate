@@ -2,6 +2,7 @@ namespace DotNetBoilerplate.Auth
 {
   using System.IO;
   using Microsoft.AspNetCore.Hosting;
+  using Microsoft.AspNetCore.Server.Kestrel.Https;
   using Microsoft.Extensions.Configuration;
 
   public class Program
@@ -14,9 +15,15 @@ namespace DotNetBoilerplate.Auth
         .Build();
 
       var host = new WebHostBuilder()
-        .UseKestrel()
+        .UseKestrel(options =>
+        {
+          // options.ThreadCount = 4;
+          options.NoDelay = true;
+          options.UseHttps("testCert.pfx", "testPassword");
+          // options.UseConnectionLogging();
+        })
         .UseConfiguration(config)
-        .UseUrls("http://*:5050")
+        .UseUrls("http://*:5050", "https://*:5051")
         .UseContentRoot(Directory.GetCurrentDirectory())
         .UseStartup<Startup>()
         .Build();
