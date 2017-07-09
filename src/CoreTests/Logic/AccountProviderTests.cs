@@ -1,5 +1,4 @@
-﻿
-namespace DotNetBoilerplate.Core.Logic.Tests
+﻿namespace DotNetBoilerplate.Core.Logic.Tests
 {
   using System;
   using System.Threading;

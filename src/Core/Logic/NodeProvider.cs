@@ -166,7 +166,7 @@ namespace DotNetBoilerplate.Core.Logic
     /// </summary>
     /// <param name="principalId"></param>
     /// <returns></returns>
-    public async Task<INode> GetPrincipal(long principalId)
+    public async Task<INode> GetNode(long principalId)
     {
       return await this.DbContext.Nodes
         .Where(p => p.Id == principalId)
@@ -180,16 +180,23 @@ namespace DotNetBoilerplate.Core.Logic
     /// <param name="domain"></param>
     /// <param name="includeTarget"></param>
     /// <returns></returns>
-    public IQueryable<INode> GetAncestorsQuery(
+    public IQueryable<NodeAndMap> GetAncestorsQuery(
       long principalId, NodeClosureMapDomain domain, bool includeTarget)
     {
       var query =
       from maps in this.DbContext.NodeClosureMaps
       join p in this.DbContext.Nodes on maps.AncestorId equals p.Id
       where maps.DescendantId == principalId && maps.Domain == domain && (includeTarget || maps.PathLength != 0)
-      select p;
-
-      return query;
+      select new
+      {
+        Node = p,
+        PathLength = maps.PathLength
+      };
+      // THIS BUG IS A BUG IN 1.1
+      // https://github.com/aspnet/EntityFramework/issues/8282
+      // really screws up my plan... but not a major issue at the moment
+      // TODO: Fix this after a 2.0 upgrade
+      return query.Select(e => new NodeAndMap(e.Node, e.PathLength));
     }
 
     /// <summary>
@@ -199,14 +206,14 @@ namespace DotNetBoilerplate.Core.Logic
     /// <param name="domain"></param>
     /// <param name="includeTarget"></param>
     /// <returns></returns>
-    public IQueryable<INode> GetDescendantsQuery(
+    public IQueryable<NodeAndMap> GetDescendantsQuery(
       long principalId, NodeClosureMapDomain domain, bool includeTarget)
     {
       var query =
       from maps in this.DbContext.NodeClosureMaps
       join p in this.DbContext.Nodes on maps.DescendantId equals p.Id
       where maps.AncestorId == principalId && maps.Domain == domain && (includeTarget || maps.PathLength != 0)
-      select p;
+      select new NodeAndMap(p, maps.PathLength);
 
       return query;
     }

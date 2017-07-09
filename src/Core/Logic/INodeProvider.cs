@@ -20,6 +20,8 @@ namespace DotNetBoilerplate.Core.Logic
       NodeType nodeType,
       long auditTicketId);
 
+    Task<INode> GetNode(long principalId);
+
     Task AddChildNode(
       long ticketId,
       long parentNodeId,

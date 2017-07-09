@@ -6,7 +6,7 @@ namespace DotNetBoilerplate.Data.Entity
   using Microsoft.EntityFrameworkCore;
 
   public class UserAccount
-    : IUserAccount, INode
+    : IUserAccount
   {
     [Key]
     public long Id { get; set; }

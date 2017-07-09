@@ -13,6 +13,17 @@ namespace DotNetBoilerplate.Data.Entity
   public class Node
     : BaseEntity, INode
   {
+    public Node()
+    {
+    }
+
+    public Node(Node node)
+      : base(node)
+    {
+      this.Label = node.Label;
+      this.NodeType = node.NodeType;
+    }
+
     [Required]
     public string Label { get; set; }
 

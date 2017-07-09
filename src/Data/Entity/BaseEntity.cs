@@ -13,6 +13,21 @@ namespace DotNetBoilerplate.Data.Entity
   public abstract class BaseEntity
     : IBaseEntity
   {
+    public BaseEntity()
+    {
+    }
+
+    public BaseEntity(BaseEntity entity)
+    {
+      this.Id = entity.Id;
+      this.ExternalId = entity.ExternalId;
+      this.IsDeleted = entity.IsDeleted;
+      this.CreatedAuditTicket = entity.CreatedAuditTicket;
+      this.CreatedTicketId = entity.CreatedTicketId;
+      this.ModifiedAuditTicket = entity.ModifiedAuditTicket;
+      this.ModifiedTicketId = entity.ModifiedTicketId;
+    }
+
     /// <summary>
     /// Primary Key
     /// </summary>
