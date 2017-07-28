@@ -7,9 +7,9 @@ namespace DotNetBoilerplate.Api.Controllers
   using DotNetBoilerplate.Core.Logic;
   using DotNetBoilerplate.Core.Logic.Email;
   using DotNetBoilerplate.Data;
-  using DotNetBoilerplate.File;
   using Microsoft.AspNetCore.Authorization;
   using Microsoft.AspNetCore.Mvc;
+  using SimpleFileControl;
 
   /// <summary>
   ///
@@ -24,19 +24,19 @@ namespace DotNetBoilerplate.Api.Controllers
     /// <param name="userProvider"></param>
     /// <param name="dbContext"></param>
     /// <param name="cultureProvider"></param>
-    /// <param name="fileControl"></param>
+    /// <param name="fileStoreCollection"></param>
     /// <param name="emailProviderFactory"></param>
     public TestController(
       IUserProvider userProvider,
       IDbContext dbContext,
       ICultureProvider cultureProvider,
-      IFileControl fileControl,
+      IFileStoreCollection fileStoreCollection,
       IEmailProviderFactory emailProviderFactory)
     {
       this.UserProvider = userProvider;
       this.DbContext = dbContext;
       this.CultureProvider = cultureProvider;
-      this.FileControl = fileControl;
+      this.FileStoreCollection = fileStoreCollection;
       this.EmailProviderFactory = emailProviderFactory;
     }
 
@@ -52,7 +52,7 @@ namespace DotNetBoilerplate.Api.Controllers
     /// <returns></returns>
     private IDbContext DbContext { get; }
 
-    private IFileControl FileControl { get; }
+    private IFileStoreCollection FileStoreCollection { get; }
 
     private ICultureProvider CultureProvider { get; }
 
@@ -126,9 +126,9 @@ namespace DotNetBoilerplate.Api.Controllers
     [Route("fileTest")]
     public IActionResult FileTest()
     {
-      var tempFile = this.FileControl.DefaultFileStore.CreateTempFile();
-      var copied = this.FileControl.DefaultFileStore.CopyFile(tempFile.FileId);
-      var archived = this.FileControl.DefaultFileStore.DeleteFile(copied.FileId, true);
+      var tempFile = this.FileStoreCollection.DefaultFileStore.CreateTempFile();
+      var copied = this.FileStoreCollection.DefaultFileStore.CopyFile(tempFile.FileId);
+      var archived = this.FileStoreCollection.DefaultFileStore.DeleteFile(copied.FileId, true);
       return this.Ok(new
       {
         TempFile = tempFile,

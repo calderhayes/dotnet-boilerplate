@@ -9,7 +9,6 @@ namespace DotNetBoilerplate.Api
   using DotNetBoilerplate.Core.Logic.Email;
   using DotNetBoilerplate.Core.Model;
   using DotNetBoilerplate.Data;
-  using DotNetBoilerplate.File;
   using Hangfire;
   using Hangfire.PostgreSql;
   using Microsoft.AspNetCore.Builder;
@@ -21,6 +20,7 @@ namespace DotNetBoilerplate.Api
   using Microsoft.Extensions.Logging;
   using Microsoft.IdentityModel.Tokens;
   using Newtonsoft.Json;
+  using SimpleFileControl;
 
   public class Startup
   {
@@ -181,10 +181,10 @@ namespace DotNetBoilerplate.Api
         System.IO.Directory.CreateDirectory(archiveRoot);
       }
 
-      services.AddSingleton<IFileControl>(fs =>
+      services.AddSingleton<IFileStoreCollection>(fs =>
       {
-        var fileControl = new FileControl();
-        var localDiskStore = new File.Store.LocalDiskStore("localdisk", mainRoot, archiveRoot);
+        var fileControl = new FileStoreCollection();
+        var localDiskStore = new SimpleFileControl.Store.LocalDiskStore("localdisk", mainRoot, archiveRoot);
         fileControl.RegisterFileStore(localDiskStore);
         fileControl.DefaultFileStoreId = "localdisk";
         return fileControl;
