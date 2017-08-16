@@ -38,7 +38,7 @@
       var logger = this.loggerFactory.CreateLogger<DefaultCorsPolicyService>();
       var cors = new DefaultCorsPolicyService(logger)
       {
-          AllowedOrigins = { "http://localhost:8080" },
+          AllowedOrigins = { "http://localhost:8080", "http://localhost:8888" },
       };
       cors.AllowAll = true;
       services.AddSingleton<ICorsPolicyService>(cors);
