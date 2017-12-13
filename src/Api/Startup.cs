@@ -11,7 +11,8 @@ namespace DotNetBoilerplate.Api
   using DotNetBoilerplate.Data;
   using Hangfire;
   using Hangfire.PostgreSql;
-  using Microsoft.AspNetCore.Builder;
+    using Microsoft.AspNetCore.Authentication.JwtBearer;
+    using Microsoft.AspNetCore.Builder;
   using Microsoft.AspNetCore.Hosting;
   using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.Configuration;
@@ -87,6 +88,7 @@ namespace DotNetBoilerplate.Api
         hconfig.UsePostgreSqlStorage(connectionString);
       });
 
+      this.ConfigureAuthenticationMiddleware(services);
       this.ConfigureFileControl(services);
       this.ConfigureDataStoreServices(services);
       this.ConfigureLogicProviderServices(services);
@@ -106,14 +108,7 @@ namespace DotNetBoilerplate.Api
       loggerFactory.AddConsole(this.Configuration.GetSection("Logging"));
       loggerFactory.AddDebug();
 
-      app.UseClaimsTransformation(new ClaimsTransformationOptions()
-      {
-        Transformer = new Utility.ClaimsTransformer()
-      });
-
       app.UseMiddleware<QueryStringAuthHeaderMiddleware>();
-
-      this.ConfigureAuthenticationMiddleware(app);
 
       var config = new ApplicationConfiguration(this.Configuration);
 
@@ -138,6 +133,7 @@ namespace DotNetBoilerplate.Api
         builder.AllowCredentials();
       });
 
+      app.UseAuthentication();
       app.UseMvc();
       app.UseWebSockets();
 
@@ -215,7 +211,7 @@ namespace DotNetBoilerplate.Api
       services.AddScoped<IUserProvider, UserProvider>();
     }
 
-    private void ConfigureAuthenticationMiddleware(IApplicationBuilder app)
+    private void ConfigureAuthenticationMiddleware(IServiceCollection services)
     {
       var config = this.Configuration.GetSection("Authentication");
       var secret = Encoding.ASCII.GetBytes(config.GetValue<string>("Secret"));
@@ -223,9 +219,6 @@ namespace DotNetBoilerplate.Api
 
       var options = new JwtBearerOptions()
       {
-        AutomaticAuthenticate = true,
-        AutomaticChallenge = true,
-
         Audience = config.GetValue<string>("Audience"),
 
         RequireHttpsMetadata = config.GetValue<bool>("RequireHttpsMetadata"),
@@ -241,7 +234,26 @@ namespace DotNetBoilerplate.Api
         }
       };
 
-      app.UseJwtBearerAuthentication(options);
+      services.AddAuthentication(opts =>
+      {
+        opts.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+      })
+      .AddJwtBearer(opts =>
+      {
+        opts.Audience = config.GetValue<string>("Audience");
+
+        opts.RequireHttpsMetadata = config.GetValue<bool>("RequireHttpsMetadata");
+
+        opts.TokenValidationParameters = new TokenValidationParameters()
+        {
+          ValidateIssuerSigningKey = true,
+          IssuerSigningKey = secretKey,
+          ValidIssuer = config.GetValue<string>("Issuer"),
+          ValidateIssuer = true,
+          ValidateAudience = true,
+          ValidateLifetime = true
+        };
+      });
     }
   }
 }
