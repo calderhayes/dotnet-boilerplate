@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <NoWarn>$(NoWarn);SA1616;SA1633;SA1606;SA1600;CS1591;SA1508;SA1515;SA1642;SA1614;SA1623;SA1602;SA1009;</NoWarn>
@@ -9,26 +8,22 @@
     <AssemblyName>Core</AssemblyName>
     <PackageId>Core</PackageId>
   </PropertyGroup>
-
   <ItemGroup>
     <EmbeddedResource Include="i18next\i18next-en.json;i18next\i18next-fr.json;i18next\i18next-en-CA.json;i18next\i18next-en-US.json;i18next\i18next-fr-CA.json" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Data\Data.csproj" />
   </ItemGroup>
-
   <ItemGroup>
-    <PackageReference Include="System.ValueTuple" Version="*" />
-    <PackageReference Include="MailKit" Version="1.16.0" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.4.0" />
+    <PackageReference Include="MailKit" Version="1.22.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
     <PackageReference Include="System.Security.Claims" Version="4.3.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="1.1.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="1.1.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="1.1.2" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.0.0">
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.0.1" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
   </ItemGroup>
-
 </Project>
