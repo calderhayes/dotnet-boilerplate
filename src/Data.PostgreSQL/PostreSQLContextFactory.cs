@@ -4,10 +4,17 @@ namespace DotNetBoilerplate.Data.PostgreSQL
   using Microsoft.EntityFrameworkCore.Infrastructure;
   using DotNetBoilerplate.Data;
   using Microsoft.Extensions.Logging;
+  using Microsoft.EntityFrameworkCore.Design;
 
-  public class PostgreSQLContextFactory
-    : IDbContextFactory<PostgreSQLContext>
+    public class PostgreSQLContextFactory
+    : IDesignTimeDbContextFactory<PostgreSQLContext>
   {
+
+    public PostgreSQLContext CreateDbContext(string[] args)
+    {
+      return Create(new DbContextFactoryOptions());
+    }
+
     public PostgreSQLContext Create(DbContextFactoryOptions options)
     {
       // var connectionString = this.Configuration.GetConnectionString("ApplicationDatabase");

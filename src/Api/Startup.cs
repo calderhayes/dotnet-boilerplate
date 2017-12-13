@@ -13,7 +13,6 @@ namespace DotNetBoilerplate.Api
   using Hangfire.PostgreSql;
   using Microsoft.AspNetCore.Builder;
   using Microsoft.AspNetCore.Hosting;
-  using Microsoft.AspNetCore.SignalR.Server;
   using Microsoft.EntityFrameworkCore;
   using Microsoft.Extensions.Configuration;
   using Microsoft.Extensions.DependencyInjection;
@@ -90,7 +89,6 @@ namespace DotNetBoilerplate.Api
 
       this.ConfigureFileControl(services);
       this.ConfigureDataStoreServices(services);
-      this.ConfigureSignalR(services, config);
       this.ConfigureLogicProviderServices(services);
 
       this.Logger.LogInformation("Services configured");
@@ -142,7 +140,6 @@ namespace DotNetBoilerplate.Api
 
       app.UseMvc();
       app.UseWebSockets();
-      app.UseSignalR();
 
       app.UseHangfireDashboard();
       // hangfire server is available on URL/hangfire
@@ -188,27 +185,6 @@ namespace DotNetBoilerplate.Api
         fileControl.RegisterFileStore(localDiskStore);
         fileControl.DefaultFileStoreId = "localdisk";
         return fileControl;
-      });
-    }
-
-    private void ConfigureSignalR(
-      IServiceCollection services,
-      IApplicationConfiguration config)
-    {
-      var settings = new JsonSerializerSettings();
-      settings.ContractResolver = new SignalRContractResolver();
-
-      var serializer = JsonSerializer.Create(settings);
-      services.Add(new ServiceDescriptor(
-        typeof(JsonSerializer),
-        provider => serializer,
-        ServiceLifetime.Transient));
-
-      services.AddSignalR(options =>
-      {
-        options.Hubs.PipelineModules.Add(new GlobalExceptionHubModule(this.LoggerFactory, config));
-        options.Hubs.PipelineModules.Add(new LoggingPipelineModule(this.LoggerFactory, config));
-        options.Hubs.EnableDetailedErrors = config.Environment == EnvironmentType.Development;
       });
     }
 
