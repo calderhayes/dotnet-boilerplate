@@ -25,11 +25,15 @@
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2">
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
+    <!-- <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.3.0-beta1" /> -->
   </ItemGroup>
   <ItemGroup>
     <Content Include="stylecop.json">
       <PackageCopyToOutput>false</PackageCopyToOutput>
       <PackageFlatten>false</PackageFlatten>
+    </Content>
+    <Content Include="Standard.ruleset">
+      <PackageCopyToOutput>false</PackageCopyToOutput>
     </Content>
   </ItemGroup>
 </Project>
