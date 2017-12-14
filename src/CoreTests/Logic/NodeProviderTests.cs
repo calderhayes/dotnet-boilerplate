@@ -34,11 +34,11 @@ namespace DotNetBoilerplate.Core.Logic.Tests
         var node = await nodeProvider.CreateNode(label, nodeType, ticketId);
         Assert.NotNull(node);
         Assert.NotEqual(default(long), node.Id);
-        Assert.StrictEqual(label, node.Label);
+        Assert.True(string.Equals(label, node.Label, StringComparison.InvariantCulture));
         Assert.StrictEqual(nodeType, node.NodeType);
         Assert.StrictEqual(ticketId, node.CreatedTicketId);
         Assert.StrictEqual(ticketId, node.ModifiedTicketId);
-        Assert.StrictEqual(false, node.IsDeleted);
+        Assert.False(node.IsDeleted);
         Assert.NotEqual(default(Guid), node.ExternalId);
       }
     }
