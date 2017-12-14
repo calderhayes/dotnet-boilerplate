@@ -26,4 +26,10 @@
       <PrivateAssets>All</PrivateAssets>
     </PackageReference>
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="stylecop.json">
+      <PackageCopyToOutput>false</PackageCopyToOutput>
+      <PackageFlatten>false</PackageFlatten>
+    </Content>
+  </ItemGroup>
 </Project>
