@@ -1,6 +1,6 @@
-# Some test boilerplate with dotnet core
+# Some old and obsolete test boilerplate with dotnet core
 
-*Still a work in progress!*
+*Not maintained or used*
 
 ## Docker
 
